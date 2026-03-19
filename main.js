@@ -1,59 +1,80 @@
-import * as THREE from "three";
-import resize from "./resize.js";
+import * as THREE from 'three';
 
-const canvas = document.querySelector(".webgl");
+// 1. La Scène (le monde)
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight, 
-    0.1, 
-    10000,
-);
-camera.position.z = 5;
+scene.background = new THREE.Color(0x050505); // Un fond très sombre pour l'ambiance
 
-const renderer = new THREE.WebGLRenderer({ canvas });
+// 2. La Caméra (Vision 3D)
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.01, 1000);
+camera.position.set(5, 5, 8); // On recule la caméra pour voir la chambre
+
+// 3. Le Rendu (Renderer)
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
-
-// créer le cube et l'ajouter à la scène
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: "purple" });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-
-const group = new THREE.Group();
-group.position.x = -2;
-group.rotation.x = Math.PI / 4;
-scene.add(group);
-
-const redMaterial = new THREE.MeshBasicMaterial({ color: "red"});
-const blueMaterial = new THREE.MeshBasicMaterial({ color: "blue"});
-const leftCube = new THREE.Mesh(geometry, redMaterial);
-leftCube.position.x = -2;
-const rightCube = new THREE.Mesh(geometry, blueMaterial);
-rightCube.position.x = 2;
-const topCube = new THREE.Mesh(geometry, material);
-topCube.position.y = 2;
-group.add(leftCube);
-group.add(rightCube);
-group.add(topCube);
-
-group.position.y = -1;
-
-// render la scène
-renderer.render(scene, camera);
-resize(camera, renderer);
+renderer.shadowMap.enabled = true; // Indispensable pour les ombres !
+document.body.appendChild(renderer.domElement);
 
 
-function animate(){
-    requestAnimationFrame(animate);
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-    leftCube.rotation.x += 0.03;
-    leftCube.rotation.y += 0.03;
-    rightCube.rotation.x += 0.02;
-    rightCube.rotation.y += 0.02;
-    topCube.rotation.y += -0.03;
-    renderer.render(scene, camera);
+
+function animate() {
+    requestAnimationFrame(animate); // On demande au navigateur de redessiner
+    renderer.render(scene, camera); // On affiche la scène
 }
 
-animate();
+animate(); // On lance la boucle d'animation
+
+// Création d'un petit cube de test
+//const geometry = new THREE.BoxGeometry(1, 1, 1);
+//const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Un cube vert
+//const cube = new THREE.Mesh(geometry, material);
+//scene.add(cube);
+
+// Ajout d'une petite lumière pour y voir quelque chose
+const light = new THREE.AmbientLight(0xffffff, 1); // Lumière blanche partout
+scene.add(light);
+
+// On ajoute l'import des contrôles
+import { OrbitControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; // Pour une sensation plus fluide
+
+// On ajoute l'import de la fonction de redimensionnement
+import resize from './resize.js';
+resize(camera, renderer); // On active le redimensionnement de la fenêtre
+
+
+// Le Sol
+const floorGeometry = new THREE.PlaneGeometry(10, 10);
+const floorMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff }); // Blanc
+const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+
+floor.rotation.x = -Math.PI / 2; // On le couche à plat
+floor.receiveShadow = true;      // Important pour les ombres portées !
+scene.add(floor);
+
+// Géométrie : Largeur 10, Hauteur 5, Épaisseur 0.1
+const wallGeometry = new THREE.BoxGeometry(10, 5, 0.1);
+const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xb98f71 }); // Marron
+const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
+
+// Positionnement : 
+// On le monte de 2.5 (la moitié de sa hauteur) pour qu'il soit posé SUR le sol
+// On le recule de 5 (le bord du sol)
+backWall.position.set(0, 2.5, -5); 
+
+scene.add(backWall);
+
+// 1. Création d'un matériau spécifique pour les côtés (ex: un gris plus foncé)
+const sideWallMaterial = new THREE.MeshStandardMaterial({ color: 0xc5a289 }); // Un beige clair pour les murs latéraux}); 
+
+// 2. Application du matériau au mur de gauche
+const leftWall = new THREE.Mesh(wallGeometry, sideWallMaterial);
+leftWall.position.set(-5, 2.5, 0);
+leftWall.rotation.y = Math.PI / 2;
+scene.add(leftWall);
+
+// 3. Application du même matériau au mur de droite
+const rightWall = new THREE.Mesh(wallGeometry, sideWallMaterial);
+rightWall.position.set(5, 2.5, 0);
+rightWall.rotation.y = Math.PI / 2;
+scene.add(rightWall);
