@@ -200,9 +200,6 @@ controls.maxDistance = 5;
 controls.minPolarAngle = Math.PI / 4;   // Empêche de regarder trop vers le haut
 controls.maxPolarAngle = Math.PI / 2.3;
 
-controls.minAzimuthAngle = -Math.PI / 4; // -90 degrés (Gauche)
-controls.maxAzimuthAngle = Math.PI / 4;
-
 controls.enablePan = false;
 
 const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
@@ -316,6 +313,12 @@ rightWall.rotation.y = -Math.PI / 2;
 rightWall.receiveShadow = true;
 scene.add(rightWall);
 
+
+const frontWall = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.1), wallMat);
+frontWall.position.set(0, 2.5, 5);
+frontWall.receiveShadow = true;
+scene.add(frontWall);
+
 // Plafond (Applique le matériau texturé directement ici)
 const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), ceilingMat);
 ceiling.position.y = 5;
@@ -345,6 +348,8 @@ const noirMesh = new THREE.Mesh(
 noirMesh.position.set(-5.1, hP/2, 3 + lP/2);
 noirMesh.rotation.y = Math.PI / 2;
 scene.add(noirMesh);
+
+
 
 
 /**
