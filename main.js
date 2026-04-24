@@ -178,21 +178,33 @@ import importModel from './importModel.js';
  * 1. CONFIGURATION DE BASE
  */
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x050505); // Presque noir pour l'immersion
+scene.background = new THREE.Color(0x050505);
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 1.8, 5); // Position à hauteur d'homme
+camera.position.set(0, 1.8, 5);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true; 
-renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Ombres plus douces
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
+renderer.toneMapping = THREE.CineonToneMapping; // Le meilleur pour l'horreur
+renderer.toneMappingExposure = 1.2; // Ajuste la luminosité globale
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.minDistance = 1; 
+controls.maxDistance = 5;
 
-// RÉCUPÉRATION DE LA PUISSANCE NETTETÉ (Anisotropie)
+controls.minPolarAngle = Math.PI / 4;   // Empêche de regarder trop vers le haut
+controls.maxPolarAngle = Math.PI / 2.3;
+
+controls.minAzimuthAngle = -Math.PI / 4; // -90 degrés (Gauche)
+controls.maxAzimuthAngle = Math.PI / 4;
+
+controls.enablePan = false;
+
 const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
 
 /**
@@ -206,7 +218,6 @@ bulbLight.position.set(0, 4.5, 0);
 bulbLight.castShadow = true;
 scene.add(bulbLight);
 
-// Petit cube pour visualiser l'ampoule
 const bulbMesh = new THREE.Mesh(
     new THREE.SphereGeometry(0.05),
     new THREE.MeshBasicMaterial({ color: 0xffffff })
@@ -219,31 +230,40 @@ scene.add(bulbMesh);
  */
 const textureLoader = new THREE.TextureLoader();
 
-// --- TEXTURES SOL (Horizontal) ---
+// --- SOL ---
 const boisColor = textureLoader.load('/assets/woodcolor.jpg');
 const boisNormal = textureLoader.load('/assets/bois_normal.jpg');
 const boisRough = textureLoader.load('/assets/bois_rough.jpg');
-
 [boisColor, boisNormal, boisRough].forEach(t => {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.repeat.set(4, 4);
-    t.anisotropy = maxAnisotropy; // Fixe le flou de perspective
-});
-
-// --- TEXTURES MURS (Verticales & Clonnées) ---
-const boisColorWall = boisColor.clone();
-const boisNormalWall = boisNormal.clone();
-const boisRoughWall = boisRough.clone();
-
-[boisColorWall, boisNormalWall, boisRoughWall].forEach(t => {
-    t.wrapS = t.wrapT = THREE.RepeatWrapping;
-    t.center.set(0.5, 0.5);
-    t.rotation = Math.PI / 2; // Rotation 90°
-    t.repeat.set(8, 4); // Plus dense pour paraître plus net
     t.anisotropy = maxAnisotropy;
 });
 
-// --- TEXTURES PORTE ---
+// --- MURS (Clonées & Pivotées) ---
+const boisColorWall = boisColor.clone();
+const boisNormalWall = boisNormal.clone();
+const boisRoughWall = boisRough.clone();
+[boisColorWall, boisNormalWall, boisRoughWall].forEach(t => {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.center.set(0.5, 0.5);
+    t.rotation = Math.PI / 2;
+    t.repeat.set(8, 4);
+    t.anisotropy = maxAnisotropy;
+});
+
+// --- PLAFOND ---
+const ceilColor  = textureLoader.load('/assets/ceilingdiffuse.jpg');
+const ceilNormal = textureLoader.load('/assets/ceilingnormal.jpg');
+const ceilRough  = textureLoader.load('/assets/ceilingrough.jpg');
+[ceilColor, ceilNormal, ceilRough].forEach(t => {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.anisotropy = maxAnisotropy;
+    t.repeat.set(3, 3);
+});
+
+
+// --- PORTE ---
 const porteColor = textureLoader.load('/assets/portediffuse.jpg');
 const porteNormal = textureLoader.load('/assets/portenormal.jpg');
 const porteRough = textureLoader.load('/assets/porterough.jpg');
@@ -260,12 +280,17 @@ const wallMat = new THREE.MeshStandardMaterial({
     color: 0x5C4D3C, map: boisColorWall, normalMap: boisNormalWall, roughnessMap: boisRoughWall
 });
 
+const ceilingMat = new THREE.MeshStandardMaterial({
+    map: ceilColor, normalMap: ceilNormal, roughnessMap: ceilRough,
+    color: 0x666666, roughness: 1, side: THREE.DoubleSide
+});
+
 const porteMat = new THREE.MeshStandardMaterial({
     map: porteColor, normalMap: porteNormal, roughnessMap: porteRough, side: THREE.DoubleSide
 });
 
 /**
- * 5. CONSTRUCTION
+ * 5. CONSTRUCTION DU GRENIER
  */
 // Sol
 const floor = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), floorMat);
@@ -273,7 +298,7 @@ floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-// Murs (BoxGeometry pour avoir une épaisseur légère)
+// Murs
 const backWall = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.1), wallMat);
 backWall.position.set(0, 2.5, -5);
 backWall.receiveShadow = true;
@@ -291,7 +316,8 @@ rightWall.rotation.y = -Math.PI / 2;
 rightWall.receiveShadow = true;
 scene.add(rightWall);
 
-const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.MeshStandardMaterial({color: 0x111111}));
+// Plafond (Applique le matériau texturé directement ici)
+const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), ceilingMat);
 ceiling.position.y = 5;
 ceiling.rotation.x = Math.PI / 2;
 scene.add(ceiling);
@@ -303,16 +329,15 @@ const hP = 3.5;
 const lP = 1.5;
 
 const portePivot = new THREE.Group();
-portePivot.position.set(-4.95, 0, 3); // Position au début du mur gauche
-portePivot.rotation.y = (Math.PI / 2) + 0.4; // Entrouverte
+portePivot.position.set(-4.95, 0, 3);
+portePivot.rotation.y = (Math.PI / 2) + 0.4;
 scene.add(portePivot);
 
 const porteMesh = new THREE.Mesh(new THREE.BoxGeometry(lP, hP, 0.1), porteMat);
-porteMesh.position.set(0, hP/2, lP/2); // Centre décalé pour pivoter sur le bord
+porteMesh.position.set(0, hP/2, lP/2);
 porteMesh.castShadow = true;
 portePivot.add(porteMesh);
 
-// Fond noir derrière la porte
 const noirMesh = new THREE.Mesh(
     new THREE.PlaneGeometry(lP * 1.5, hP * 1.1),
     new THREE.MeshBasicMaterial({ color: 0x000000 })
@@ -320,6 +345,7 @@ const noirMesh = new THREE.Mesh(
 noirMesh.position.set(-5.1, hP/2, 3 + lP/2);
 noirMesh.rotation.y = Math.PI / 2;
 scene.add(noirMesh);
+
 
 /**
  * 7. OBJETS
@@ -334,38 +360,30 @@ function ajouterUnCube(nom, largeur, hauteur, profondeur, x, z, couleur) {
     mesh.castShadow = true;
     scene.add(mesh);
 }
-
 ajouterUnCube("Cube1", 1, 1, 1, 0, 0, 0x00ff00);
 ajouterUnCube("Cube2", 1.5, 2.5, 0.8, -3.5, -4, 0xffff00);
 
 importModel(scene);
 
 /**
- * 8. BOUCLE FINALE
+ * 8. BOUCLE FINALE ET ANIMATION
  */
-// 1. On définit l'intensité normale en dehors de la boucle
 const baseIntensity = 70; 
 
 function animate() {
     requestAnimationFrame(animate);
 
-    // --- EFFET FLICKER (Horreur) ---
-    // On crée un petit scintillement constant (grésillement visuel)
+    // Flicker
     bulbLight.intensity = baseIntensity + (Math.random() - 0.5) * 10;
-
-    // On crée les grosses coupures aléatoires
     if (Math.random() > 0.97) { 
-        // 3% de chance de tomber dans le noir presque total
         bulbLight.intensity = Math.random() * 5; 
     }
-
-    // Optionnel : faire varier la taille de la sphère de l'ampoule pour suivre l'intensité
     bulbMesh.scale.setScalar(0.5 + (bulbLight.intensity / baseIntensity) * 0.5);
 
     controls.update();
     renderer.render(scene, camera);
 }
-animate()
+animate();
 
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
