@@ -170,7 +170,6 @@ ajouterObjetEspace("Cube10", 0.4, -3, 2, -2, 0xffffff);
 ajouterObjetEspace("Cube11", 0.4, -3, 3, -3, 0xffffff);
 
 */
-
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import importModel from './importModel.js';
@@ -179,182 +178,195 @@ import importModel from './importModel.js';
  * 1. CONFIGURATION DE BASE
  */
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x111111); // Un gris très sombre pour le fond
+scene.background = new THREE.Color(0x050505); // Presque noir pour l'immersion
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(5, 5, 8);
+camera.position.set(0, 1.8, 5); // Position à hauteur d'homme
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true; 
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Ombres plus douces
 document.body.appendChild(renderer.domElement);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
+// RÉCUPÉRATION DE LA PUISSANCE NETTETÉ (Anisotropie)
+const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+
 /**
- * 2. ÉCLAIRAGE DE TRAVAIL
+ * 2. ÉCLAIRAGE
  */
-const ambientLight = new THREE.AmbientLight(0xffffff, 2); 
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); 
 scene.add(ambientLight);
 
-const sunLight = new THREE.DirectionalLight(0xffffff, 0.7);
-sunLight.position.set(5, 10, 7);
-sunLight.castShadow = true;
-sunLight.intensity = 1.2
-scene.add(sunLight);
-
-// PointLight(couleur, intensité, distance, dégradation)
-const bulbLight = new THREE.PointLight(0xffffff, 80, 20); 
-
-// On la place au centre (0), près du plafond (4.5), et un peu vers le milieu (0)
+const bulbLight = new THREE.PointLight(0xffffff, 70, 20); 
 bulbLight.position.set(0, 4.5, 0); 
-bulbLight.castShadow = true; // Pour que les cubes fassent des ombres au sol
+bulbLight.castShadow = true;
 scene.add(bulbLight);
 
-// Optionnel : Un petit cube blanc pour voir où est ton ampoule
-const bulbGeometry = new THREE.SphereGeometry(0.1);
-const bulbMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
-const bulbMesh = new THREE.Mesh(bulbGeometry, bulbMaterial);
+// Petit cube pour visualiser l'ampoule
+const bulbMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(0.05),
+    new THREE.MeshBasicMaterial({ color: 0xffffff })
+);
 bulbMesh.position.copy(bulbLight.position);
 scene.add(bulbMesh);
+
 /**
- * 3. CHARGEMENT DES TEXTURES (Poly Haven)
+ * 3. GESTION DES TEXTURES
  */
 const textureLoader = new THREE.TextureLoader();
 
-// On charge tes images
+// --- TEXTURES SOL (Horizontal) ---
 const boisColor = textureLoader.load('/assets/woodcolor.jpg');
 const boisNormal = textureLoader.load('/assets/bois_normal.jpg');
 const boisRough = textureLoader.load('/assets/bois_rough.jpg');
 
-// Réglage de la répétition (UV Mapping)
-// On dit à Three.js de répéter l'image pour qu'elle ne soit pas étirée
-[boisColor, boisNormal, boisRough].forEach((tex) => {
-    tex.wrapS = THREE.RepeatWrapping; 
-    tex.wrapT = THREE.RepeatWrapping; 
-    tex.repeat.set(4, 2); 
+[boisColor, boisNormal, boisRough].forEach(t => {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(4, 4);
+    t.anisotropy = maxAnisotropy; // Fixe le flou de perspective
+});
+
+// --- TEXTURES MURS (Verticales & Clonnées) ---
+const boisColorWall = boisColor.clone();
+const boisNormalWall = boisNormal.clone();
+const boisRoughWall = boisRough.clone();
+
+[boisColorWall, boisNormalWall, boisRoughWall].forEach(t => {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.center.set(0.5, 0.5);
+    t.rotation = Math.PI / 2; // Rotation 90°
+    t.repeat.set(8, 4); // Plus dense pour paraître plus net
+    t.anisotropy = maxAnisotropy;
+});
+
+// --- TEXTURES PORTE ---
+const porteColor = textureLoader.load('/assets/portediffuse.jpg');
+const porteNormal = textureLoader.load('/assets/portenormal.jpg');
+const porteRough = textureLoader.load('/assets/porterough.jpg');
+[porteColor, porteNormal, porteRough].forEach(t => { t.anisotropy = maxAnisotropy; });
+
+/**
+ * 4. MATÉRIAUX
+ */
+const floorMat = new THREE.MeshStandardMaterial({
+    color: 0x7B5E43, map: boisColor, normalMap: boisNormal, roughnessMap: boisRough
+});
+
+const wallMat = new THREE.MeshStandardMaterial({
+    color: 0x5C4D3C, map: boisColorWall, normalMap: boisNormalWall, roughnessMap: boisRoughWall
+});
+
+const porteMat = new THREE.MeshStandardMaterial({
+    map: porteColor, normalMap: porteNormal, roughnessMap: porteRough, side: THREE.DoubleSide
 });
 
 /**
- * 4. CRÉATION DES MATÉRIAUX
+ * 5. CONSTRUCTION
  */
-// Le fameux matériau "Grenier" que tu voulais
-const grenierMat = new THREE.MeshStandardMaterial({
-    color: 0x5C4D3C, 
-    map: boisColor,
-    normalMap: boisNormal,
-    roughnessMap: boisRough,
-    roughness: 1 // Aspect très mat/poussiéreux
-});
-
-// Matériau simple pour le plafond
-const ceilingMat = new THREE.MeshStandardMaterial({ color: 0x111111 });
-
-/**
- * 5. CONSTRUCTION DU GRENIER
- */
-// Géométries
-const floorGeom = new THREE.PlaneGeometry(10, 10);
-const wallGeom = new THREE.BoxGeometry(10, 5, 0.1);
-
 // Sol
-const floor = new THREE.Mesh(floorGeom, grenierMat);
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), floorMat);
 floor.rotation.x = -Math.PI / 2;
 floor.receiveShadow = true;
 scene.add(floor);
 
-// Mur du fond
-const backWall = new THREE.Mesh(wallGeom, grenierMat);
+// Murs (BoxGeometry pour avoir une épaisseur légère)
+const backWall = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.1), wallMat);
 backWall.position.set(0, 2.5, -5);
 backWall.receiveShadow = true;
 scene.add(backWall);
 
-// Mur Gauche
-const leftWall = new THREE.Mesh(wallGeom, grenierMat);
+const leftWall = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.1), wallMat);
 leftWall.position.set(-5, 2.5, 0);
 leftWall.rotation.y = Math.PI / 2;
 leftWall.receiveShadow = true;
 scene.add(leftWall);
 
-// Mur Droite
-const rightWall = new THREE.Mesh(wallGeom, grenierMat);
+const rightWall = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.1), wallMat);
 rightWall.position.set(5, 2.5, 0);
 rightWall.rotation.y = -Math.PI / 2;
 rightWall.receiveShadow = true;
 scene.add(rightWall);
 
-// Plafond
-const ceiling = new THREE.Mesh(floorGeom, ceilingMat);
+const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), new THREE.MeshStandardMaterial({color: 0x111111}));
 ceiling.position.y = 5;
 ceiling.rotation.x = Math.PI / 2;
 scene.add(ceiling);
 
-// --- CRÉATION DE LA PORTE ENTROUVERTE ---
+/**
+ * 6. LA PORTE & LE TROU NOIR
+ */
+const hP = 3.5; 
+const lP = 1.5;
 
-// --- PORTE SUR LE MUR DE GAUCHE ---
-
-// 1. Le Pivot (Charnière)
 const portePivot = new THREE.Group();
-// On le place contre le mur de gauche (x = -4.95 pour éviter le clignotement)
-// On le décale un peu vers le fond (z = -2)
-portePivot.position.set(-4.95, 0, 3); 
-
-// On l'aligne d'abord avec le mur de gauche (90° = Math.PI / 2)
-// On ajoute 0.4 pour l'effet entrouvert
-portePivot.rotation.y = (Math.PI / 2) + 0.4; 
-
+portePivot.position.set(-4.95, 0, 3); // Position au début du mur gauche
+portePivot.rotation.y = (Math.PI / 2) + 0.4; // Entrouverte
 scene.add(portePivot);
 
-// 2. Le Panneau de la porte
-const porteGeom = new THREE.BoxGeometry(1.5, 3.3, 0.1);
-const porteMat = new THREE.MeshStandardMaterial({ 
-    color: 0x5c4033, 
-    roughness: 0.9 
-});
-const porteMesh = new THREE.Mesh(porteGeom, porteMat);
-
-// 3. Décalage pour la charnière
-// La porte se développe le long de l'axe Z maintenant
-porteMesh.position.set(0, 1.25, 0.6); 
-
+const porteMesh = new THREE.Mesh(new THREE.BoxGeometry(lP, hP, 0.1), porteMat);
+porteMesh.position.set(0, hP/2, lP/2); // Centre décalé pour pivoter sur le bord
 porteMesh.castShadow = true;
 portePivot.add(porteMesh);
+
+// Fond noir derrière la porte
+const noirMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(lP * 1.5, hP * 1.1),
+    new THREE.MeshBasicMaterial({ color: 0x000000 })
+);
+noirMesh.position.set(-5.1, hP/2, 3 + lP/2);
+noirMesh.rotation.y = Math.PI / 2;
+scene.add(noirMesh);
+
 /**
- * 6. OBJETS ET MODÈLES
+ * 7. OBJETS
  */
 function ajouterUnCube(nom, largeur, hauteur, profondeur, x, z, couleur) {
-    const geom = new THREE.BoxGeometry(largeur, hauteur, profondeur);
-    const mat = new THREE.MeshStandardMaterial({ color: couleur });
-    const mesh = new THREE.Mesh(geom, mat);
+    const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(largeur, hauteur, profondeur),
+        new THREE.MeshStandardMaterial({ color: couleur })
+    );
     mesh.position.set(x, hauteur / 2, z);
     mesh.name = nom;
     mesh.castShadow = true;
-    mesh.receiveShadow = true;
     scene.add(mesh);
-    return mesh;
 }
 
-// Tes cubes de test (ils resteront colorés pour l'instant)
 ajouterUnCube("Cube1", 1, 1, 1, 0, 0, 0x00ff00);
 ajouterUnCube("Cube2", 1.5, 2.5, 0.8, -3.5, -4, 0xffff00);
-ajouterUnCube("Cube5", 0.5, 3, 0.5, 4, -4, 0x0000ff);
 
-// Chargement des modèles GLB externes
 importModel(scene);
 
 /**
- * 7. LOGIQUE DE RENDU
+ * 8. BOUCLE FINALE
  */
+// 1. On définit l'intensité normale en dehors de la boucle
+const baseIntensity = 70; 
+
 function animate() {
     requestAnimationFrame(animate);
+
+    // --- EFFET FLICKER (Horreur) ---
+    // On crée un petit scintillement constant (grésillement visuel)
+    bulbLight.intensity = baseIntensity + (Math.random() - 0.5) * 10;
+
+    // On crée les grosses coupures aléatoires
+    if (Math.random() > 0.97) { 
+        // 3% de chance de tomber dans le noir presque total
+        bulbLight.intensity = Math.random() * 5; 
+    }
+
+    // Optionnel : faire varier la taille de la sphère de l'ampoule pour suivre l'intensité
+    bulbMesh.scale.setScalar(0.5 + (bulbLight.intensity / baseIntensity) * 0.5);
+
     controls.update();
     renderer.render(scene, camera);
 }
+animate()
 
-animate();
-
-// Gestion de la taille de fenêtre (Responsive)
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
