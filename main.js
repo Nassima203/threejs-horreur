@@ -378,7 +378,7 @@ const baseIntensity = 70;
 function animate() {
     requestAnimationFrame(animate);
 
-    // Flicker
+    // flicker
     bulbLight.intensity = baseIntensity + (Math.random() - 0.5) * 10;
     if (Math.random() > 0.97) { 
         bulbLight.intensity = Math.random() * 5; 
@@ -394,4 +394,97 @@ window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+let tempsRestant = 900;
+let chronoInterval;
+const timerElement = document.getElementById('timer-display');
+
+function demarrerChrono() {
+    // On nettoie au cas où un chrono tourne déjà
+    clearInterval(chronoInterval);
+
+    chronoInterval = setInterval(() => {
+        tempsRestant--;
+
+        // Formater le temps (minutes:secondes)
+        const minutes = Math.floor(tempsRestant / 60);
+        const secondes = tempsRestant % 60;
+        
+        // Affichage avec des "0" pour le style (ex: 09:05)
+        timerElement.innerText = 
+            `${minutes.toString().padStart(2, '0')}:${secondes.toString().padStart(2, '0')}`;
+
+        // Si le temps est écoulé
+        if (tempsRestant <= 0) {
+            terminerPartie(false); // false = perdu
+        }
+        
+        // Effet visuel : si moins de 30 secondes, le texte clignote
+        if (tempsRestant < 30) {
+            timerElement.style.color = (tempsRestant % 2 === 0) ? '#ff0000' : '#330000';
+        }
+
+    }, 1000); // S'exécute toutes les secondes (1000ms)
+}
+
+function terminerPartie(victoire) {
+    clearInterval(chronoInterval);
+    if (victoire) {
+        alert("Félicitations, vous avez survécu !");
+    } else {
+        alert("Le temps est écoulé... vous faites partie du grenier maintenant.");
+        // Ici, tu pourras appeler ton écran de défaite avec le screamer !
+    }
+}
+
+const landingPage = document.getElementById('landing-page')
+
+document.getElementById('start-btn').addEventListener('click', () => {
+    // 1. Cacher la landing page
+    landingPage.style.display = 'none';
+    
+    // 2. Lancer le jeu
+    demarrerChrono();
+    
+    // 3. (Optionnel) Lancer la musique d'ambiance
+});
+
+let estEnPause = false;
+
+function togglePause() {
+    estEnPause = !estEnPause;
+    const pauseMenu = document.getElementById('pause-menu');
+
+    if (estEnPause) {
+        // --- ON PAUSE ---
+        clearInterval(chronoInterval); // Arrête le décompte
+        pauseMenu.style.display = 'flex';
+        controls.enabled = false; // Bloque la caméra pour ne pas tricher
+        console.log("Jeu en pause");
+    } else {
+        // --- ON REPREND ---
+        pauseMenu.style.display = 'none';
+        controls.enabled = true;
+        demarrerChrono(); // Relance le chrono là où il s'était arrêté
+        console.log("Reprise du jeu");
+    }
+}
+
+// Écouter la touche "Echap" ou "P" pour mettre en pause
+window.addEventListener('keydown', (event) => {
+    if (event.key === "Escape" || event.key === "p" || event.key === "P") {
+        // On ne met en pause que si le jeu a déjà commencé
+        if (landingPage.style.display === 'none') {
+            togglePause();
+        }
+    }
+});
+
+// Lier le bouton "Reprendre" du menu
+document.getElementById('resume-btn').addEventListener('click', togglePause);
+
+// Lier le bouton "Menu Principal" (recharge la page)
+document.getElementById('home-btn').addEventListener('click', () => {
+    window.location.reload();
 });

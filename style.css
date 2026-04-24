@@ -12,3 +12,98 @@ html, body{
     top: 0;
     left: 0;
 }
+
+#landing-page {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: #050505; /* Noir profond */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Toujours au-dessus du canvas Three.js */
+    transition: opacity 1s ease-out; /* Pour un fondu au noir élégant */
+}
+
+.content {
+    text-align: center;
+}
+
+.horror-title {
+    color: #8b0000;
+    font-family: 'Creepster', cursive, serif; /* Ou une police système un peu brute */
+    font-size: 5rem;
+    margin-bottom: 10px;
+}
+
+#start-btn {
+    padding: 15px 40px;
+    font-size: 1.5rem;
+    background-color: transparent;
+    color: #eee;
+    border: 2px solid #8b0000;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#start-btn:hover {
+    background-color: #8b0000;
+    box-shadow: 0 0 20px #ff0000;
+}
+
+#ui-container {
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    pointer-events: none; /* Pour ne pas gêner les clics sur la 3D */
+    z-index: 100;
+}
+
+#timer-display {
+    font-family: 'Courier New', Courier, monospace; /* Style rétro/machine à écrire */
+    font-size: 2.5rem;
+    color: #8b0000; /* Rouge sang sombre */
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    font-weight: bold;
+}
+
+#pause-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.8); /* Fond semi-transparent pour voir la scène derrière */
+    backdrop-filter: blur(5px); /* Effet de flou pour l'ambiance */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.pause-content {
+    text-align: center;
+    border: 1px solid #8b0000;
+    padding: 40px;
+    background: #050505;
+}
+
+#resume-btn, #home-btn {
+    display: block;
+    width: 200px;
+    margin: 20px auto;
+    padding: 10px;
+    background: transparent;
+    color: white;
+    border: 1px solid #444;
+    cursor: pointer;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+#resume-btn:hover {
+    border-color: #8b0000;
+    color: #ff0000;
+}
