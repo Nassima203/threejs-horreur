@@ -173,10 +173,12 @@ ajouterObjetEspace("Cube11", 0.4, -3, 3, -3, 0xffffff);
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import importModel from './importModel.js';
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
 
 /**
- * 1. CONFIGURATION DE BASE
+ * CONFIGURATION DE BASE
  */
+
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x050505);
 
@@ -191,7 +193,7 @@ document.body.appendChild(renderer.domElement);
 renderer.toneMapping = THREE.CineonToneMapping; // Le meilleur pour l'horreur
 renderer.toneMappingExposure = 1.2; // Ajuste la luminosité globale
 
-const controls = new OrbitControls(camera, renderer.domElement);
+/* const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 controls.dampingFactor = 0.05;
 controls.minDistance = 1; 
@@ -200,7 +202,52 @@ controls.maxDistance = 5;
 controls.minPolarAngle = Math.PI / 4;   // Empêche de regarder trop vers le haut
 controls.maxPolarAngle = Math.PI / 2.3;
 
-controls.enablePan = false;
+controls.enablePan = false; */
+const controls = new PointerLockControls(camera, document.body);
+controls.pointerSpeed = 0.6;
+
+// On lance le verrouillage de la souris au clic sur "Start"
+document.getElementById('start-btn').addEventListener('click', () => {
+    controls.lock();
+});
+
+// Variables pour le mouvement
+let moveForward = false;
+let moveBackward = false;
+let moveLeft = false;
+let moveRight = false;
+const velocity = new THREE.Vector3();
+const direction = new THREE.Vector3();
+
+// Écouteurs de touches
+const onKeyDown = (event) => {
+    switch (event.code) {
+        case 'ArrowUp':
+        case 'KeyW': moveForward = true; break;
+        case 'ArrowLeft':
+        case 'KeyA': moveLeft = true; break;
+        case 'ArrowDown':
+        case 'KeyS': moveBackward = true; break;
+        case 'ArrowRight':
+        case 'KeyD': moveRight = true; break;
+    }
+};
+
+const onKeyUp = (event) => {
+    switch (event.code) {
+        case 'ArrowUp':
+        case 'KeyW': moveForward = false; break;
+        case 'ArrowLeft':
+        case 'KeyA': moveLeft = false; break;
+        case 'ArrowDown':
+        case 'KeyS': moveBackward = false; break;
+        case 'ArrowRight':
+        case 'KeyD': moveRight = false; break;
+    }
+};
+
+document.addEventListener('keydown', onKeyDown);
+document.addEventListener('keyup', onKeyUp);
 
 const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
 
@@ -221,6 +268,7 @@ const bulbMesh = new THREE.Mesh(
 );
 bulbMesh.position.copy(bulbLight.position);
 scene.add(bulbMesh);
+
 
 /**
  * 3. GESTION DES TEXTURES
@@ -374,6 +422,7 @@ importModel(scene);
  * 8. BOUCLE FINALE ET ANIMATION
  */
 const baseIntensity = 70; 
+const clock = new THREE.Clock(); 
 
 function animate() {
     requestAnimationFrame(animate);
@@ -385,7 +434,32 @@ function animate() {
     }
     bulbMesh.scale.setScalar(0.5 + (bulbLight.intensity / baseIntensity) * 0.5);
 
-    controls.update();
+  
+    renderer.render(scene, camera);
+    if (controls.isLocked) {
+        const delta = clock.getDelta(); // Temps écoulé entre deux images
+
+        velocity.x -= velocity.x * 15.0 * delta;
+        velocity.z -= velocity.z * 15.0 * delta;
+
+        direction.z = Number(moveForward) - Number(moveBackward);
+        direction.x = Number(moveRight) - Number(moveLeft);
+        direction.normalize();
+
+        if (moveForward || moveBackward) velocity.z -= direction.z * 150.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 150.0 * delta;
+
+        controls.moveRight(-velocity.x * delta);
+        controls.moveForward(-velocity.z * delta);
+
+        const limite = 4.7;
+        camera.position.x = Math.max(-limite, Math.min(limite, camera.position.x));
+        camera.position.z = Math.max(-limite, Math.min(limite, camera.position.z));
+        
+        // On garde une hauteur constante (yeux à 1.60m environ)
+        camera.position.y = 1.6; 
+    }
+
     renderer.render(scene, camera);
 }
 animate();
@@ -460,12 +534,12 @@ function togglePause() {
         // --- ON PAUSE ---
         clearInterval(chronoInterval); // Arrête le décompte
         pauseMenu.style.display = 'flex';
-        controls.enabled = false; // Bloque la caméra pour ne pas tricher
+        controls.unlock(); // Bloque la caméra pour ne pas tricher
         console.log("Jeu en pause");
     } else {
         // --- ON REPREND ---
         pauseMenu.style.display = 'none';
-        controls.enabled = true;
+        controls.lock();
         demarrerChrono(); // Relance le chrono là où il s'était arrêté
         console.log("Reprise du jeu");
     }
