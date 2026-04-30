@@ -413,8 +413,8 @@ function ajouterUnCube(nom, largeur, hauteur, profondeur, x, z, couleur) {
     mesh.castShadow = true;
     scene.add(mesh);
 }
-ajouterUnCube("Cube1", 1, 1, 1, 0, 0, 0x00ff00);
-ajouterUnCube("Cube2", 1.5, 2.5, 0.8, -3.5, -4, 0xffff00);
+//ajouterUnCube("Cube1", 1, 1, 1, 0, 0, 0x00ff00);
+//ajouterUnCube("Cube2", 1.5, 2.5, 0.8, -3.5, -4, 0xffff00);
 
 importModel(scene);
 
