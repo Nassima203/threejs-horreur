@@ -154,80 +154,81 @@ export default function importModel(scene) {
         position: { x: -2, y: 0.5, z: 2 },
         scale:    { x: 0.5, y: 0.5, z: 0.5 },
     });
-
-    // Ajoute les autres modèles de la même façon :
-    // chargerModele('chaise -conjuring.glb', { position: {...}, scale: {...} });
-    // chargerModele('casque - the descent.glb', { ... });
-    // chargerModele('oeil - black christmas.glb', { ... });
-
-
-   chargerModele('skate.glb', {          // ← était : 'A Girl walks Alone at Night skate.glb'
+    chargerModele('skate.glb', {          
     position: { x: 3, y: 0, z: 2 },
     scale: { x: 1, y: 1, z: 1 },
 });
 
-chargerModele('casque - the descent.glb', {   // ✅ correct
+    chargerModele('casque - the descent.glb', { 
     position: { x: -3, y: 0, z: -3 },
     scale: { x: 1, y: 1, z: 1 },
 });
-
-chargerModele('chaise -conjuring.glb', {      // ✅ correct (pas d'espace avant le tiret)
+    chargerModele('chaise -conjuring.glb', {     
     position: { x: 2, y: 0, z: -4 },
     rotation: { x: 0, y: Math.PI / 3, z: 0 },
-    scale: { x: 1, y: 1, z: 1 },
+    scale: { x: 3, y: 3, z: 3 },
 });
 
-chargerModele('masque sans les yeux.glb', {   // ← était : 'Eyes without a face masque.glb'
+    chargerModele('masque sans les yeux.glb', {   
     position: { x: -1, y: 1.2, z: -4.5 },
     scale: { x: 1, y: 1, z: 1 },
 });
 
-chargerModele('robe de chambre exorciste.glb', {  // ← était : 'robe de chambre exociste.glb' (faute)
+    chargerModele('robe de chambre exorciste.glb', { 
     position: { x: 4, y: 0, z: -3 },
     rotation: { x: 0, y: -Math.PI / 4, z: 0 },
-    scale: { x: 1, y: 1, z: 1 },
+    scale: { x: 2, y: 2, z: 2 },
 });
 
-chargerModele('masque micheal myers.glb', {   // ← était : 'masque michael myers - halloween.glb'
+    chargerModele('masque micheal myers.glb', { 
     position: { x: 0, y: 1, z: -4.5 },
     scale: { x: 1, y: 1, z: 1 },
 });
 
-chargerModele('oeil-blackchristmas.glb', {    // ← était : 'oeil - black christmas.glb' (pas d'espaces)
-    position: { x: -4, y: 2, z: -2 },
-    scale: { x: 0.8, y: 0.8, z: 0.8 },
+   // chargerModele('oeil-blackchristmas.glb', {   
+   // position: { x: -4, y: 2, z: -2 },
+ // scale: { x: 0.8, y: 0.8, z: 0.8 },
+//});
+
+chargerModele('oeil-blackchristmas.glb', {   
+    position: { 
+        x: -4.8,  // collé sur le mur gauche (là où est la porte)
+        y: 1.75,  // hP/2 = 3.5/2 = 1.75, au centre du trou noir
+        z: 3.75   // 3 + 1.5/2 = 3.75, centré sur le trou noir
+    },
+    rotation: { x: 0, y: Math.PI / 2, z: 0 },  // tourné vers la pièce
+scale: { x: 0.1, y: 0.1, z: 0.1 },  // l'oeuil est très petit
 });
 
-chargerModele('rideau de douche-psychose.glb', {  // ← était : 'rideau de douche - psychose.glb'
-    position: { x: 4.5, y: 0, z: 0 },
-    scale: { x: 1, y: 1, z: 1 },
+    chargerModele('rideau de douche-psychose.glb', { 
+    position: { x: 0, y: 2.5, z: -4.5 },
+    scale:    { x: 3, y: 3, z: 3},
 });
 
-chargerModele('noeud_papillon_saw.glb', {     // ← était : 'Saw Noeud Papillon.glb'
+    chargerModele('noeud_papillon_saw.glb', {     
     position: { x: 1, y: 0.5, z: 2 },
     scale: { x: 1, y: 1, z: 1 },
 });
 
-chargerModele('tenue de clown-hell house.glb', {  // ✅ correct
+    chargerModele('tenue de clown-hell house.glb', { 
     position: { x: -2, y: 0, z: -2 },
     rotation: { x: 0, y: Math.PI / 6, z: 0 },
     scale: { x: 1, y: 1, z: 1 },
 });
 
-chargerModele('mitaines_terrifier.glb', {     // ← était : 'Terrifier mitaines.glb'
+    chargerModele('mitaines_terrifier.glb', {    
     position: { x: 3, y: 0, z: 3 },
     scale: { x: 1, y: 1, z: 1 },
 });
 
-chargerModele('tricycle shinning.glb', {      // ← était : 'Tricycle shining.glb' (double n)
+    chargerModele('tricycle shinning.glb', {  
     position: { x: -3, y: 0, z: 3 },
     rotation: { x: 0, y: Math.PI / 2, z: 0 },
     scale: { x: 1, y: 1, z: 1 },
 });
 
-chargerModele('TV - poltergeist.glb', {       // ✅ correct
+    chargerModele('TV - poltergeist.glb', {      
     position: { x: 0, y: 0, z: -3 },
     scale: { x: 1, y: 1, z: 1 },
 });
-
 }
