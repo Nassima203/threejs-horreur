@@ -159,4 +159,75 @@ export default function importModel(scene) {
     // chargerModele('chaise -conjuring.glb', { position: {...}, scale: {...} });
     // chargerModele('casque - the descent.glb', { ... });
     // chargerModele('oeil - black christmas.glb', { ... });
+
+
+   chargerModele('skate.glb', {          // ← était : 'A Girl walks Alone at Night skate.glb'
+    position: { x: 3, y: 0, z: 2 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('casque - the descent.glb', {   // ✅ correct
+    position: { x: -3, y: 0, z: -3 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('chaise -conjuring.glb', {      // ✅ correct (pas d'espace avant le tiret)
+    position: { x: 2, y: 0, z: -4 },
+    rotation: { x: 0, y: Math.PI / 3, z: 0 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('masque sans les yeux.glb', {   // ← était : 'Eyes without a face masque.glb'
+    position: { x: -1, y: 1.2, z: -4.5 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('robe de chambre exorciste.glb', {  // ← était : 'robe de chambre exociste.glb' (faute)
+    position: { x: 4, y: 0, z: -3 },
+    rotation: { x: 0, y: -Math.PI / 4, z: 0 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('masque micheal myers.glb', {   // ← était : 'masque michael myers - halloween.glb'
+    position: { x: 0, y: 1, z: -4.5 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('oeil-blackchristmas.glb', {    // ← était : 'oeil - black christmas.glb' (pas d'espaces)
+    position: { x: -4, y: 2, z: -2 },
+    scale: { x: 0.8, y: 0.8, z: 0.8 },
+});
+
+chargerModele('rideau de douche-psychose.glb', {  // ← était : 'rideau de douche - psychose.glb'
+    position: { x: 4.5, y: 0, z: 0 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('noeud_papillon_saw.glb', {     // ← était : 'Saw Noeud Papillon.glb'
+    position: { x: 1, y: 0.5, z: 2 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('tenue de clown-hell house.glb', {  // ✅ correct
+    position: { x: -2, y: 0, z: -2 },
+    rotation: { x: 0, y: Math.PI / 6, z: 0 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('mitaines_terrifier.glb', {     // ← était : 'Terrifier mitaines.glb'
+    position: { x: 3, y: 0, z: 3 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('tricycle shinning.glb', {      // ← était : 'Tricycle shining.glb' (double n)
+    position: { x: -3, y: 0, z: 3 },
+    rotation: { x: 0, y: Math.PI / 2, z: 0 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
+chargerModele('TV - poltergeist.glb', {       // ✅ correct
+    position: { x: 0, y: 0, z: -3 },
+    scale: { x: 1, y: 1, z: 1 },
+});
+
 }
