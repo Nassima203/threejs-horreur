@@ -48,7 +48,7 @@ export default function importModel(scene) {
         } = options;
 
         loader.load(
-            `models/${fichier}`,
+            encodeURI(`models/${fichier}`),
 
             // ✅ Succès
             (gltf) => {
@@ -124,6 +124,7 @@ export default function importModel(scene) {
         scale:    { x: 0.7, y: 0.7, z: 0.7 },
     });
 
+    
     chargerModele('botte.glb', {
         position: { x: -1, y: 0, z: 1 },
         scale:    { x: 1, y: 1, z: 1 },
@@ -131,7 +132,7 @@ export default function importModel(scene) {
 
     chargerModele('cassette the ring.glb', {
         position: { x: 0, y: 0.3, z: -3 }, // Un peu au dessus du sol
-        scale:    { x: 0.5, y: 0.5, z: 0.5 },
+        scale:    { x: 1, y: 1, z: 1 },
     });
 
     chargerModele('ballon - it.glb', {
@@ -145,10 +146,20 @@ export default function importModel(scene) {
         scale:    { x: 1, y: 1, z: 1 },
     });
 
-    chargerModele('enseigne.glb', {
-        position: { x: 0, y: 4, z: -4.9 }, // Accroché au mur du fond
-        scale:    { x: 1, y: 1, z: 1 },
-    });
+  //  chargerModele('enseigne.glb', {
+    //    position: { x: 0, y: 4, z: -4.9 }, // Accroché au mur du fond
+       // scale:    { x: 1, y: 1, z: 1 },
+  //  });
+
+chargerModele('enseigne.glb', {
+    position: { 
+        x: -4.5,  // collé au mur gauche
+        y: 0,     // posé par terre
+        z: -4.5   // coin avec le mur du fond
+    },
+    rotation: { x: 0, y: Math.PI / 4, z: 0 },  // tourné dans le coin
+    scale: { x: 2, y: 2, z: 2 },  // un peu grand
+});
 
     chargerModele('damaged_helmet.glb', {
         position: { x: -2, y: 0.5, z: 2 },
@@ -166,14 +177,24 @@ export default function importModel(scene) {
     chargerModele('chaise -conjuring.glb', {     
     position: { x: 2, y: 0, z: -4 },
     rotation: { x: 0, y: Math.PI / 3, z: 0 },
-    scale: { x: 3, y: 3, z: 3 },
+    scale: { x: 2, y: 2, z: 2 },
 });
 
-    chargerModele('masque sans les yeux.glb', {   
-    position: { x: -1, y: 1.2, z: -4.5 },
+
+
+   // chargerModele('masque sans les yeux.glb', {   
+   // position: { x: -1, y: 1.2, z: -4.5 },
+  //  scale: { x: 1, y: 1, z: 1 },
+//});
+chargerModele('masque sans les yeux.glb', {
+    position: { 
+        x: 4.9,   // collé au mur droit
+        y: 2.5,   // en haut
+        z: 0      // centré sur le mur
+    },
+    rotation: { x: 0, y: -Math.PI / 2, z: 0 },  // face vers la pièce
     scale: { x: 1, y: 1, z: 1 },
 });
-
     chargerModele('robe de chambre exorciste.glb', { 
     position: { x: 4, y: 0, z: -3 },
     rotation: { x: 0, y: -Math.PI / 4, z: 0 },
@@ -217,8 +238,8 @@ scale: { x: 0.1, y: 0.1, z: 0.1 },  // l'oeuil est très petit
 });
 
     chargerModele('mitaines_terrifier.glb', {    
-    position: { x: 3, y: 0, z: 3 },
-    scale: { x: 1, y: 1, z: 1 },
+    position: { x: 1, y: 0, z: 0.5 },
+    scale: { x: 0.3, y: 0.3, z: 0.3 },
 });
 
     chargerModele('tricycle shinning.glb', {  
