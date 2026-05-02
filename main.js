@@ -1,59 +1,564 @@
-import * as THREE from "three";
-import resize from "./resize.js";
+/*
+import * as THREE from 'three';
+// On ajoute l'import des contrôles
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import importModel from './importModel.js';
 
-const canvas = document.querySelector(".webgl");
+
+// 1. La Scène (le monde)
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight, 
-    0.1, 
-    10000,
-);
-camera.position.z = 5;
+scene.background = new THREE.Color(0x000000); // Un fond très sombre pour l'ambiance
 
-const renderer = new THREE.WebGLRenderer({ canvas });
+
+// 2. La Caméra (Vision 3D)
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(2, 1.6, 4); // On recule la caméra pour voir la chambre
+
+
+importModel(scene)
+
+// 3. Le Rendu (Renderer)
+const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true; // Indispensable pour les ombres !
+document.body.appendChild(renderer.domElement);
 
-// créer le cube et l'ajouter à la scène
+function animate() {
+    requestAnimationFrame(animate); // On demande au navigateur de redessiner
+    renderer.render(scene, camera); // On affiche la scène
+}
+
+animate(); // On lance la boucle d'animation
+
+// Création d'un petit cube de test
+//const geometry = new THREE.BoxGeometry(1, 1, 1);
+//const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Un cube vert
+//const cube = new THREE.Mesh(geometry, material);
+//scene.add(cube);
+
+// Ajout d'une petite lumière pour y voir quelque chose
+const light = new THREE.AmbientLight(0xffffff, 1); // Lumière blanche partout
+scene.add(light);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; // Ajoute un effet d'inertie fluide
+
+// Le Sol
+const floorGeometry = new THREE.PlaneGeometry(10, 10);
+const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 }); // Gris clair 
+
+const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+
+floor.rotation.x = -Math.PI / 2; // On le couche à plat
+floor.receiveShadow = true;      // Important pour les ombres portées !
+scene.add(floor);
+
+const textureLoader = new THREE.TextureLoader();
+
+// Charge une image de bois (trouve une texture de "dark wood floor" libre de droits)
+const floorTexture = textureLoader.load('darkwoodenfloor.jpg');
+floorTexture.wrapS = THREE.RepeatWrapping; // Répéter la texture
+floorTexture.wrapT = THREE.RepeatWrapping;
+floorTexture.repeat.set(4, 4); // Répète 4 fois sur la surface pour éviter l'effet étiré
+
+const floorMaterialCalculated = new THREE.MeshStandardMaterial({ 
+    map: floorTexture, 
+    roughness: 0.8 // Un vieux sol n'est pas brillant
+});
+
+floor.material = floorMaterialCalculated;
+
+// Géométrie : Largeur 10, Hauteur 5, Épaisseur 0.1
+const wallGeometry = new THREE.BoxGeometry(10, 5, 0.1);
+const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
+
+const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
+
+// Positionnement : 
+// On le monte de 2.5 (la moitié de sa hauteur) pour qu'il soit posé SUR le sol
+// On le recule de 5 (le bord du sol)
+backWall.position.set(0, 2.5, -5); 
+
+scene.add(backWall);
+
+// --- MUR DE GAUCHE ---
+const leftWall = new THREE.Mesh(wallGeometry, wallMaterial);
+leftWall.position.set(-5, 2.5, 0); // On le décale à gauche (-5 sur X)
+leftWall.rotation.y = Math.PI / 2; // On le fait pivoter de 90 degrés
+scene.add(leftWall);
+
+// --- MUR DE DROITE ---
+const rightWall = new THREE.Mesh(wallGeometry, wallMaterial);
+rightWall.position.set(5, 2.5, 0); 
+rightWall.rotation.y = -Math.PI / 2; 
+scene.add(rightWall);
+
+
+
+// --- LE PLAFOND ---
+// On réutilise la géométrie du sol
+const ceilingGeometry = new THREE.PlaneGeometry(10, 10);
+const ceilingMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 }); // Plus sombre
+const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
+
+ceiling.position.y = 5; // Hauteur du mur
+ceiling.rotation.x = Math.PI / 2; // On le tourne pour qu'il regarde vers le bas
+scene.add(ceiling);
+
+
+
+// Création d'un petit cube de test
 const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshBasicMaterial({ color: "purple" });
+const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Un cube vert
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
 
-const group = new THREE.Group();
-group.position.x = -2;
-group.rotation.x = Math.PI / 4;
-scene.add(group);
+// Fonction utilitaire pour créer un cube
+function ajouterUnCube(nom, largeur, hauteur, profondeur, x, z, couleur) {
+    const geom = new THREE.BoxGeometry(largeur, hauteur, profondeur);
+    const mat = new THREE.MeshStandardMaterial({ color: couleur });
+    const mesh = new THREE.Mesh(geom, mat);
 
-const redMaterial = new THREE.MeshBasicMaterial({ color: "red"});
-const blueMaterial = new THREE.MeshBasicMaterial({ color: "blue"});
-const leftCube = new THREE.Mesh(geometry, redMaterial);
-leftCube.position.x = -2;
-const rightCube = new THREE.Mesh(geometry, blueMaterial);
-rightCube.position.x = 2;
-const topCube = new THREE.Mesh(geometry, material);
-topCube.position.y = 2;
-group.add(leftCube);
-group.add(rightCube);
-group.add(topCube);
+    // Positionnement : on calcule Y pour que le bas touche le sol (0)
+    mesh.position.set(x, hauteur / 2, z);
+    mesh.name = nom;
+    
+    // Activation des ombres pour ce cube
+    mesh.castShadow = true;
+    mesh.receiveShadow = true;
 
-group.position.y = -1;
-
-// render la scène
-renderer.render(scene, camera);
-resize(camera, renderer);
-
-
-function animate(){
-    requestAnimationFrame(animate);
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.01;
-    leftCube.rotation.x += 0.03;
-    leftCube.rotation.y += 0.03;
-    rightCube.rotation.x += 0.02;
-    rightCube.rotation.y += 0.02;
-    topCube.rotation.y += -0.03;
-    renderer.render(scene, camera);
+    scene.add(mesh);
+    return mesh;
 }
 
+// Syntaxe : ajouterUnCube("Nom", Largeur, Hauteur, Profondeur, X, Z, Couleur)
+
+ajouterUnCube("Cube1", 1, 1, 1, 0, 0, 0x00ff00);       // Vert au milieu
+ajouterUnCube("Cube2", 1.5, 2.5, 0.8, -3.5, -4, 0xffff00); // jaune au fond à gauche
+ajouterUnCube("Cube3", 0.6, 0.6, 0.6, -4, 1, 0x331a00);    // Marron à gauche
+ajouterUnCube("Cube4", 0.8, 0.4, 0.8, 2, 2, 0xff0000);      // Rouge devant à droite
+ajouterUnCube("Cube5", 0.5, 3, 0.5, 4, -4, 0x0000ff);    // Bleu au fond à droite
+
+// Fonction pour créer un cube à n'importe quelle hauteur
+function ajouterObjetEspace(nom, taille, x, y, z, couleur) {
+    const geom = new THREE.BoxGeometry(taille, taille, taille);
+    const mat = new THREE.MeshStandardMaterial({ color: couleur });
+    const mesh = new THREE.Mesh(geom, mat);
+
+    // Ici, 'y' détermine la hauteur par rapport au sol (0)
+    mesh.position.set(x, y, z);
+    mesh.name = nom;
+    
+    scene.add(mesh);
+    return mesh;
+}
+
+// Syntaxe : (Nom, Taille, X, Y, Z, Couleur)
+
+// Un cube qui flotte très haut au centre (Lustre ?)
+ajouterObjetEspace("Cube6", 0.5, 0, 4, 0, 0xffff00); 
+
+// Un cube au milieu de la hauteur, près du mur du fond
+ajouterObjetEspace("Cube7", 0.8, 2, 2.5, -3, 0x00ffff);
+
+// Un petit cube qui lévite juste au-dessus du sol
+ajouterObjetEspace("Cube8", 0.3, -2, 1.2, 2, 0xff00ff);
+
+// Une rangée de cubes en diagonale dans le vide
+ajouterObjetEspace("Cube9", 0.4, -3, 1, -1, 0xffffff);
+ajouterObjetEspace("Cube10", 0.4, -3, 2, -2, 0xffffff);
+ajouterObjetEspace("Cube11", 0.4, -3, 3, -3, 0xffffff);
+
+*/
+import * as THREE from 'three';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import importModel from './importModel.js';
+import { PointerLockControls } from 'three/addons/controls/PointerLockControls.js';
+
+/**
+ * CONFIGURATION DE BASE
+ */
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x050505);
+
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 1.8, 5);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true; 
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+renderer.toneMapping = THREE.CineonToneMapping; // Le meilleur pour l'horreur
+renderer.toneMappingExposure = 1.2; // Ajuste la luminosité globale
+
+/* const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.minDistance = 1; 
+controls.maxDistance = 5;
+
+controls.minPolarAngle = Math.PI / 4;   // Empêche de regarder trop vers le haut
+controls.maxPolarAngle = Math.PI / 2.3;
+
+controls.enablePan = false; */
+const controls = new PointerLockControls(camera, document.body);
+controls.pointerSpeed = 0.6;
+
+// On lance le verrouillage de la souris au clic sur "Start"
+document.getElementById('start-btn').addEventListener('click', () => {
+    controls.lock();
+});
+
+// Variables pour le mouvement
+let moveForward = false;
+let moveBackward = false;
+let moveLeft = false;
+let moveRight = false;
+const velocity = new THREE.Vector3();
+const direction = new THREE.Vector3();
+
+// Écouteurs de touches
+const onKeyDown = (event) => {
+    switch (event.code) {
+        case 'ArrowUp':
+        case 'KeyW': moveForward = true; break;
+        case 'ArrowLeft':
+        case 'KeyA': moveLeft = true; break;
+        case 'ArrowDown':
+        case 'KeyS': moveBackward = true; break;
+        case 'ArrowRight':
+        case 'KeyD': moveRight = true; break;
+    }
+};
+
+const onKeyUp = (event) => {
+    switch (event.code) {
+        case 'ArrowUp':
+        case 'KeyW': moveForward = false; break;
+        case 'ArrowLeft':
+        case 'KeyA': moveLeft = false; break;
+        case 'ArrowDown':
+        case 'KeyS': moveBackward = false; break;
+        case 'ArrowRight':
+        case 'KeyD': moveRight = false; break;
+    }
+};
+
+document.addEventListener('keydown', onKeyDown);
+document.addEventListener('keyup', onKeyUp);
+
+const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+
+/**
+ * 2. ÉCLAIRAGE
+ */
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); 
+scene.add(ambientLight);
+
+const bulbLight = new THREE.PointLight(0xffffff, 70, 20); 
+bulbLight.position.set(0, 4.5, 0); 
+bulbLight.castShadow = true;
+scene.add(bulbLight);
+
+const bulbMesh = new THREE.Mesh(
+    new THREE.SphereGeometry(0.05),
+    new THREE.MeshBasicMaterial({ color: 0xffffff })
+);
+bulbMesh.position.copy(bulbLight.position);
+scene.add(bulbMesh);
+
+
+/**
+ * 3. GESTION DES TEXTURES
+ */
+const textureLoader = new THREE.TextureLoader();
+
+// --- SOL ---
+const boisColor = textureLoader.load('/assets/woodcolor.jpg');
+const boisNormal = textureLoader.load('/assets/bois_normal.jpg');
+const boisRough = textureLoader.load('/assets/bois_rough.jpg');
+[boisColor, boisNormal, boisRough].forEach(t => {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(4, 4);
+    t.anisotropy = maxAnisotropy;
+});
+
+// --- MURS (Clonées & Pivotées) ---
+const boisColorWall = boisColor.clone();
+const boisNormalWall = boisNormal.clone();
+const boisRoughWall = boisRough.clone();
+[boisColorWall, boisNormalWall, boisRoughWall].forEach(t => {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.center.set(0.5, 0.5);
+    t.rotation = Math.PI / 2;
+    t.repeat.set(8, 4);
+    t.anisotropy = maxAnisotropy;
+});
+
+// --- PLAFOND ---
+const ceilColor  = textureLoader.load('/assets/ceilingdiffuse.jpg');
+const ceilNormal = textureLoader.load('/assets/ceilingnormal.jpg');
+const ceilRough  = textureLoader.load('/assets/ceilingrough.jpg');
+[ceilColor, ceilNormal, ceilRough].forEach(t => {
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.anisotropy = maxAnisotropy;
+    t.repeat.set(3, 3);
+});
+
+
+// --- PORTE ---
+const porteColor = textureLoader.load('/assets/portediffuse.jpg');
+const porteNormal = textureLoader.load('/assets/portenormal.jpg');
+const porteRough = textureLoader.load('/assets/porterough.jpg');
+[porteColor, porteNormal, porteRough].forEach(t => { t.anisotropy = maxAnisotropy; });
+
+/**
+ * 4. MATÉRIAUX
+ */
+const floorMat = new THREE.MeshStandardMaterial({
+    color: 0x7B5E43, map: boisColor, normalMap: boisNormal, roughnessMap: boisRough
+});
+
+const wallMat = new THREE.MeshStandardMaterial({
+    color: 0x5C4D3C, map: boisColorWall, normalMap: boisNormalWall, roughnessMap: boisRoughWall
+});
+
+const ceilingMat = new THREE.MeshStandardMaterial({
+    map: ceilColor, normalMap: ceilNormal, roughnessMap: ceilRough,
+    color: 0x666666, roughness: 1, side: THREE.DoubleSide
+});
+
+const porteMat = new THREE.MeshStandardMaterial({
+    map: porteColor, normalMap: porteNormal, roughnessMap: porteRough, side: THREE.DoubleSide
+});
+
+/**
+ * 5. CONSTRUCTION DU GRENIER
+ */
+// Sol
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), floorMat);
+floor.rotation.x = -Math.PI / 2;
+floor.receiveShadow = true;
+scene.add(floor);
+
+// Murs
+const backWall = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.1), wallMat);
+backWall.position.set(0, 2.5, -5);
+backWall.receiveShadow = true;
+scene.add(backWall);
+
+const leftWall = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.1), wallMat);
+leftWall.position.set(-5, 2.5, 0);
+leftWall.rotation.y = Math.PI / 2;
+leftWall.receiveShadow = true;
+scene.add(leftWall);
+
+const rightWall = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.1), wallMat);
+rightWall.position.set(5, 2.5, 0);
+rightWall.rotation.y = -Math.PI / 2;
+rightWall.receiveShadow = true;
+scene.add(rightWall);
+
+
+const frontWall = new THREE.Mesh(new THREE.BoxGeometry(10, 5, 0.1), wallMat);
+frontWall.position.set(0, 2.5, 5);
+frontWall.receiveShadow = true;
+scene.add(frontWall);
+
+// Plafond (Applique le matériau texturé directement ici)
+const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), ceilingMat);
+ceiling.position.y = 5;
+ceiling.rotation.x = Math.PI / 2;
+scene.add(ceiling);
+
+/**
+ * 6. LA PORTE & LE TROU NOIR
+ */
+const hP = 3.5; 
+const lP = 1.5;
+
+const portePivot = new THREE.Group();
+portePivot.position.set(-4.95, 0, 3);
+portePivot.rotation.y = (Math.PI / 2) + 0.4;
+scene.add(portePivot);
+
+const porteMesh = new THREE.Mesh(new THREE.BoxGeometry(lP, hP, 0.1), porteMat);
+porteMesh.position.set(0, hP/2, lP/2);
+porteMesh.castShadow = true;
+portePivot.add(porteMesh);
+
+const noirMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(lP * 1.5, hP * 1.1),
+    new THREE.MeshBasicMaterial({ color: 0x000000 })
+);
+noirMesh.position.set(-5.1, hP/2, 3 + lP/2);
+noirMesh.rotation.y = Math.PI / 2;
+scene.add(noirMesh);
+
+
+
+
+/**
+ * 7. OBJETS
+ */
+function ajouterUnCube(nom, largeur, hauteur, profondeur, x, z, couleur) {
+    const mesh = new THREE.Mesh(
+        new THREE.BoxGeometry(largeur, hauteur, profondeur),
+        new THREE.MeshStandardMaterial({ color: couleur })
+    );
+    mesh.position.set(x, hauteur / 2, z);
+    mesh.name = nom;
+    mesh.castShadow = true;
+    scene.add(mesh);
+}
+//ajouterUnCube("Cube1", 1, 1, 1, 0, 0, 0x00ff00);
+//ajouterUnCube("Cube2", 1.5, 2.5, 0.8, -3.5, -4, 0xffff00);
+
+importModel(scene);
+
+/**
+ * 8. BOUCLE FINALE ET ANIMATION
+ */
+const baseIntensity = 70; 
+const clock = new THREE.Clock(); 
+
+function animate() {
+    requestAnimationFrame(animate);
+
+    // flicker
+    bulbLight.intensity = baseIntensity + (Math.random() - 0.5) * 10;
+    if (Math.random() > 0.97) { 
+        bulbLight.intensity = Math.random() * 5; 
+    }
+    bulbMesh.scale.setScalar(0.5 + (bulbLight.intensity / baseIntensity) * 0.5);
+
+  
+    renderer.render(scene, camera);
+    if (controls.isLocked) {
+        const delta = clock.getDelta(); // Temps écoulé entre deux images
+
+        velocity.x -= velocity.x * 15.0 * delta;
+        velocity.z -= velocity.z * 15.0 * delta;
+
+        direction.z = Number(moveForward) - Number(moveBackward);
+        direction.x = Number(moveRight) - Number(moveLeft);
+        direction.normalize();
+
+        if (moveForward || moveBackward) velocity.z -= direction.z * 150.0 * delta;
+        if (moveLeft || moveRight) velocity.x -= direction.x * 150.0 * delta;
+
+        controls.moveRight(-velocity.x * delta);
+        controls.moveForward(-velocity.z * delta);
+
+        const limite = 4.7;
+        camera.position.x = Math.max(-limite, Math.min(limite, camera.position.x));
+        camera.position.z = Math.max(-limite, Math.min(limite, camera.position.z));
+        
+        // On garde une hauteur constante (yeux à 1.60m environ)
+        camera.position.y = 1.6; 
+    }
+
+    renderer.render(scene, camera);
+}
 animate();
+
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+let tempsRestant = 900;
+let chronoInterval;
+const timerElement = document.getElementById('timer-display');
+
+function demarrerChrono() {
+    // On nettoie au cas où un chrono tourne déjà
+    clearInterval(chronoInterval);
+
+    chronoInterval = setInterval(() => {
+        tempsRestant--;
+
+        // Formater le temps (minutes:secondes)
+        const minutes = Math.floor(tempsRestant / 60);
+        const secondes = tempsRestant % 60;
+        
+        // Affichage avec des "0" pour le style (ex: 09:05)
+        timerElement.innerText = 
+            `${minutes.toString().padStart(2, '0')}:${secondes.toString().padStart(2, '0')}`;
+
+        // Si le temps est écoulé
+        if (tempsRestant <= 0) {
+            terminerPartie(false); // false = perdu
+        }
+        
+        // Effet visuel : si moins de 30 secondes, le texte clignote
+        if (tempsRestant < 30) {
+            timerElement.style.color = (tempsRestant % 2 === 0) ? '#ff0000' : '#330000';
+        }
+
+    }, 1000); // S'exécute toutes les secondes (1000ms)
+}
+
+function terminerPartie(victoire) {
+    clearInterval(chronoInterval);
+    if (victoire) {
+        alert("Félicitations, vous avez survécu !");
+    } else {
+        alert("Le temps est écoulé... vous faites partie du grenier maintenant.");
+        // Ici, tu pourras appeler ton écran de défaite avec le screamer !
+    }
+}
+
+const landingPage = document.getElementById('landing-page')
+
+document.getElementById('start-btn').addEventListener('click', () => {
+    // 1. Cacher la landing page
+    landingPage.style.display = 'none';
+    
+    // 2. Lancer le jeu
+    demarrerChrono();
+    
+    // 3. (Optionnel) Lancer la musique d'ambiance
+});
+
+let estEnPause = false;
+
+function togglePause() {
+    estEnPause = !estEnPause;
+    const pauseMenu = document.getElementById('pause-menu');
+
+    if (estEnPause) {
+        // --- ON PAUSE ---
+        clearInterval(chronoInterval); // Arrête le décompte
+        pauseMenu.style.display = 'flex';
+        controls.unlock(); // Bloque la caméra pour ne pas tricher
+        console.log("Jeu en pause");
+    } else {
+        // --- ON REPREND ---
+        pauseMenu.style.display = 'none';
+        controls.lock();
+        demarrerChrono(); // Relance le chrono là où il s'était arrêté
+        console.log("Reprise du jeu");
+    }
+}
+
+// Écouter la touche "Echap" ou "P" pour mettre en pause
+window.addEventListener('keydown', (event) => {
+    if (event.key === "Escape" || event.key === "p" || event.key === "P") {
+        // On ne met en pause que si le jeu a déjà commencé
+        if (landingPage.style.display === 'none') {
+            togglePause();
+        }
+    }
+});
+
+// Lier le bouton "Reprendre" du menu
+document.getElementById('resume-btn').addEventListener('click', togglePause);
+
+// Lier le bouton "Menu Principal" (recharge la page)
+document.getElementById('home-btn').addEventListener('click', () => {
+    window.location.reload();
+});
