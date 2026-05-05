@@ -1,175 +1,3 @@
-/*
-import * as THREE from 'three';
-// On ajoute l'import des contrôles
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import importModel from './importModel.js';
-
-
-// 1. La Scène (le monde)
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000); // Un fond très sombre pour l'ambiance
-
-
-// 2. La Caméra (Vision 3D)
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(2, 1.6, 4); // On recule la caméra pour voir la chambre
-
-
-importModel(scene)
-
-// 3. Le Rendu (Renderer)
-const renderer = new THREE.WebGLRenderer({ antialias: true });
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.shadowMap.enabled = true; // Indispensable pour les ombres !
-document.body.appendChild(renderer.domElement);
-
-function animate() {
-    requestAnimationFrame(animate); // On demande au navigateur de redessiner
-    renderer.render(scene, camera); // On affiche la scène
-}
-
-animate(); // On lance la boucle d'animation
-
-// Création d'un petit cube de test
-//const geometry = new THREE.BoxGeometry(1, 1, 1);
-//const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Un cube vert
-//const cube = new THREE.Mesh(geometry, material);
-//scene.add(cube);
-
-// Ajout d'une petite lumière pour y voir quelque chose
-const light = new THREE.AmbientLight(0xffffff, 1); // Lumière blanche partout
-scene.add(light);
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true; // Ajoute un effet d'inertie fluide
-
-// Le Sol
-const floorGeometry = new THREE.PlaneGeometry(10, 10);
-const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x888888 }); // Gris clair 
-
-const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-
-floor.rotation.x = -Math.PI / 2; // On le couche à plat
-floor.receiveShadow = true;      // Important pour les ombres portées !
-scene.add(floor);
-
-const textureLoader = new THREE.TextureLoader();
-
-// Charge une image de bois (trouve une texture de "dark wood floor" libre de droits)
-const floorTexture = textureLoader.load('darkwoodenfloor.jpg');
-floorTexture.wrapS = THREE.RepeatWrapping; // Répéter la texture
-floorTexture.wrapT = THREE.RepeatWrapping;
-floorTexture.repeat.set(4, 4); // Répète 4 fois sur la surface pour éviter l'effet étiré
-
-const floorMaterialCalculated = new THREE.MeshStandardMaterial({ 
-    map: floorTexture, 
-    roughness: 0.8 // Un vieux sol n'est pas brillant
-});
-
-floor.material = floorMaterialCalculated;
-
-// Géométrie : Largeur 10, Hauteur 5, Épaisseur 0.1
-const wallGeometry = new THREE.BoxGeometry(10, 5, 0.1);
-const wallMaterial = new THREE.MeshStandardMaterial({ color: 0x444444 });
-
-const backWall = new THREE.Mesh(wallGeometry, wallMaterial);
-
-// Positionnement : 
-// On le monte de 2.5 (la moitié de sa hauteur) pour qu'il soit posé SUR le sol
-// On le recule de 5 (le bord du sol)
-backWall.position.set(0, 2.5, -5); 
-
-scene.add(backWall);
-
-// --- MUR DE GAUCHE ---
-const leftWall = new THREE.Mesh(wallGeometry, wallMaterial);
-leftWall.position.set(-5, 2.5, 0); // On le décale à gauche (-5 sur X)
-leftWall.rotation.y = Math.PI / 2; // On le fait pivoter de 90 degrés
-scene.add(leftWall);
-
-// --- MUR DE DROITE ---
-const rightWall = new THREE.Mesh(wallGeometry, wallMaterial);
-rightWall.position.set(5, 2.5, 0); 
-rightWall.rotation.y = -Math.PI / 2; 
-scene.add(rightWall);
-
-
-
-// --- LE PLAFOND ---
-// On réutilise la géométrie du sol
-const ceilingGeometry = new THREE.PlaneGeometry(10, 10);
-const ceilingMaterial = new THREE.MeshStandardMaterial({ color: 0x222222 }); // Plus sombre
-const ceiling = new THREE.Mesh(ceilingGeometry, ceilingMaterial);
-
-ceiling.position.y = 5; // Hauteur du mur
-ceiling.rotation.x = Math.PI / 2; // On le tourne pour qu'il regarde vers le bas
-scene.add(ceiling);
-
-
-
-// Création d'un petit cube de test
-const geometry = new THREE.BoxGeometry(1, 1, 1);
-const material = new THREE.MeshStandardMaterial({ color: 0x00ff00 }); // Un cube vert
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-
-// Fonction utilitaire pour créer un cube
-function ajouterUnCube(nom, largeur, hauteur, profondeur, x, z, couleur) {
-    const geom = new THREE.BoxGeometry(largeur, hauteur, profondeur);
-    const mat = new THREE.MeshStandardMaterial({ color: couleur });
-    const mesh = new THREE.Mesh(geom, mat);
-
-    // Positionnement : on calcule Y pour que le bas touche le sol (0)
-    mesh.position.set(x, hauteur / 2, z);
-    mesh.name = nom;
-    
-    // Activation des ombres pour ce cube
-    mesh.castShadow = true;
-    mesh.receiveShadow = true;
-
-    scene.add(mesh);
-    return mesh;
-}
-
-// Syntaxe : ajouterUnCube("Nom", Largeur, Hauteur, Profondeur, X, Z, Couleur)
-
-ajouterUnCube("Cube1", 1, 1, 1, 0, 0, 0x00ff00);       // Vert au milieu
-ajouterUnCube("Cube2", 1.5, 2.5, 0.8, -3.5, -4, 0xffff00); // jaune au fond à gauche
-ajouterUnCube("Cube3", 0.6, 0.6, 0.6, -4, 1, 0x331a00);    // Marron à gauche
-ajouterUnCube("Cube4", 0.8, 0.4, 0.8, 2, 2, 0xff0000);      // Rouge devant à droite
-ajouterUnCube("Cube5", 0.5, 3, 0.5, 4, -4, 0x0000ff);    // Bleu au fond à droite
-
-// Fonction pour créer un cube à n'importe quelle hauteur
-function ajouterObjetEspace(nom, taille, x, y, z, couleur) {
-    const geom = new THREE.BoxGeometry(taille, taille, taille);
-    const mat = new THREE.MeshStandardMaterial({ color: couleur });
-    const mesh = new THREE.Mesh(geom, mat);
-
-    // Ici, 'y' détermine la hauteur par rapport au sol (0)
-    mesh.position.set(x, y, z);
-    mesh.name = nom;
-    
-    scene.add(mesh);
-    return mesh;
-}
-
-// Syntaxe : (Nom, Taille, X, Y, Z, Couleur)
-
-// Un cube qui flotte très haut au centre (Lustre ?)
-ajouterObjetEspace("Cube6", 0.5, 0, 4, 0, 0xffff00); 
-
-// Un cube au milieu de la hauteur, près du mur du fond
-ajouterObjetEspace("Cube7", 0.8, 2, 2.5, -3, 0x00ffff);
-
-// Un petit cube qui lévite juste au-dessus du sol
-ajouterObjetEspace("Cube8", 0.3, -2, 1.2, 2, 0xff00ff);
-
-// Une rangée de cubes en diagonale dans le vide
-ajouterObjetEspace("Cube9", 0.4, -3, 1, -1, 0xffffff);
-ajouterObjetEspace("Cube10", 0.4, -3, 2, -2, 0xffffff);
-ajouterObjetEspace("Cube11", 0.4, -3, 3, -3, 0xffffff);
-
-*/
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 import importModel from './importModel.js';
@@ -179,6 +7,7 @@ import { PointerLockControls } from 'three/addons/controls/PointerLockControls.j
  * CONFIGURATION DE BASE
  */
 
+const API_KEY = "5e7b28ec91823044cb5c980b695d3d85";
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x050505);
 
@@ -189,35 +18,133 @@ const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.shadowMap.enabled = true; 
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-document.body.appendChild(renderer.domElement);
 renderer.toneMapping = THREE.CineonToneMapping; // Le meilleur pour l'horreur
 renderer.toneMappingExposure = 1.2; // Ajuste la luminosité globale
+document.body.appendChild(renderer.domElement);
 
-/* const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.dampingFactor = 0.05;
-controls.minDistance = 1; 
-controls.maxDistance = 5;
 
-controls.minPolarAngle = Math.PI / 4;   // Empêche de regarder trop vers le haut
-controls.maxPolarAngle = Math.PI / 2.3;
+// VARIABLES DU JEU
 
-controls.enablePan = false; */
-const controls = new PointerLockControls(camera, document.body);
-controls.pointerSpeed = 0.6;
+let objetSurvoleNom = null;
+let tentativeActuelle = "";
+let tempsRestant = 900;
+let chronoInterval;
+let santeMentale = 100; 
+let nbObjetsTrouves = 0;
+const objetsResolus = new Set(); // Stocke les noms des objets déjà trouvés
 
-// On lance le verrouillage de la souris au clic sur "Start"
-document.getElementById('start-btn').addEventListener('click', () => {
-    controls.lock();
-});
 
 // Variables pour le mouvement
 let moveForward = false;
 let moveBackward = false;
 let moveLeft = false;
 let moveRight = false;
+
 const velocity = new THREE.Vector3();
 const direction = new THREE.Vector3();
+
+// FILMS
+
+const catalogueFilms = {
+    "chucky": { 
+        answers: ["chucky", "child's play", "jeu d'enfant"], 
+        id: "tt0094862" 
+    },
+    "casque - martyrs": { 
+        answers: ["martyrs"], 
+        id: "tt1029234" 
+    },
+    "masque - scream": { 
+        answers: ["scream", "ghostface"], 
+        id: "tt0117588" 
+    },
+    "masque - vendredi 13": { 
+        answers: ["vendredi 13", "friday the 13th", "jason voorhees"], 
+        id: "tt0080761" 
+    },
+    "masque - le silence des agneaux": { 
+        answers: ["le silence des agneaux", "the silence of the lambs", "hannibal lecter"], 
+        id: "tt0102926" 
+    },
+    "chapeau krugger": { 
+        answers: ["freddy", "les griffes de la nuit", "a nightmare on elm street"], 
+        id: "tt0087800" 
+    },
+    "botte": { 
+        answers: ["wolf creek"], // Si c'est la botte de Mick Taylor
+        id: "tt0429247" 
+    },
+    "cassette the ring": { 
+        answers: ["the ring", "le cercle", "samara"], 
+        id: "tt0298130" 
+    },
+    "ballon - it": { 
+        answers: ["it", "ça", "grippe-sou", "pennywise"], 
+        id: "tt1396484" 
+    },
+    "animatronix": { 
+        answers: ["fnaf", "five nights at freddy's"], 
+        id: "tt4589256" 
+    },
+    "skate": { 
+        answers: ["it", "ça", "georgie"], 
+        id: "tt1396484" 
+    },
+    "casque - the descent": { 
+        answers: ["the descent"], 
+        id: "tt0435625" 
+    },
+    "chaise -conjuring": { 
+        answers: ["the conjuring", "les dossiers warren"], 
+        id: "tt1457767" 
+    },
+    "masque sans les yeux": { 
+        answers: ["eyes without a face", "les yeux sans visage"], // Ressemble au masque de dollface
+        id: "tt0053459" 
+    },
+    "robe de chambre exorciste": { 
+        answers: ["lexorciste", "the exorcist", "regan"], 
+        id: "tt0070047" 
+    },
+    "masque micheal myers": { 
+        answers: ["halloween", "michael myers"], 
+        id: "tt0077651" 
+    },
+    "oeil-blackchristmas": { 
+        answers: ["black christmas"], 
+        id: "tt0071222" 
+    },
+    "rideau de douche-psychose": { 
+        answers: ["psychose", "psycho"], 
+        id: "tt0054215" 
+    },
+    "noeud_papillon_saw": { 
+        answers: ["saw", "jigsaw"], 
+        id: "tt0387564" 
+    },
+    "tenue de clown-hell house": { 
+        answers: ["hell house", "hell house llc"], 
+        id: "tt5073948" 
+    },
+    "mitaines_terrifier": { 
+        answers: ["terrifier", "art the clown"], 
+        id: "tt3503448" 
+    },
+    "tricycle shinning": { 
+        answers: ["the shining", "shining"], 
+        id: "tt0081505" 
+    },
+    "TV - poltergeist": { 
+        answers: ["poltergeist"], 
+        id: "tt0084503" 
+    }
+};
+
+
+// Système de contrôles
+
+const controls = new PointerLockControls(camera, document.body);
+controls.pointerSpeed = 0.6;
 
 // Écouteurs de touches
 const onKeyDown = (event) => {
@@ -230,6 +157,7 @@ const onKeyDown = (event) => {
         case 'KeyS': moveBackward = true; break;
         case 'ArrowRight':
         case 'KeyD': moveRight = true; break;
+        case 'KeyE': if (objetSurvoleNom && controls.isLocked) ouvrirOuija(); break;
     }
 };
 
@@ -251,8 +179,13 @@ document.addEventListener('keyup', onKeyUp);
 
 const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
 
+// On lance le verrouillage de la souris au clic sur "Start"
+document.getElementById('start-btn').addEventListener('click', () => {
+    controls.lock();
+});
+
 /**
- * 2. ÉCLAIRAGE
+ *  ÉCLAIRAGE
  */
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.4); 
 scene.add(ambientLight);
@@ -398,8 +331,6 @@ noirMesh.rotation.y = Math.PI / 2;
 scene.add(noirMesh);
 
 
-
-
 /**
  * 7. OBJETS
  */
@@ -438,6 +369,17 @@ function animate() {
     renderer.render(scene, camera);
     if (controls.isLocked) {
         const delta = clock.getDelta(); // Temps écoulé entre deux images
+        raycaster.setFromCamera({ x: 0, y: 0 }, camera);
+        const intersects = raycaster.intersectObjects(scene.children, true);
+        let intersectionNom = null;
+
+        if (intersects.length > 0) {
+            let obj = intersects[0].object;
+            while (obj.parent && !catalogueFilms[obj.name]) obj = obj.parent;
+            if (catalogueFilms[obj.name] && intersects[0].distance < 3.5) intersectionNom = obj.name;
+        }
+        objetSurvoleNom = intersectionNom;
+        document.getElementById('interaction-prompt').style.display = objetSurvoleNom ? 'block' : 'none';
 
         velocity.x -= velocity.x * 15.0 * delta;
         velocity.z -= velocity.z * 15.0 * delta;
@@ -461,6 +403,7 @@ function animate() {
     }
 
     renderer.render(scene, camera);
+    
 }
 animate();
 
@@ -470,8 +413,7 @@ window.addEventListener('resize', () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-let tempsRestant = 900;
-let chronoInterval;
+
 const timerElement = document.getElementById('timer-display');
 
 function demarrerChrono() {
@@ -562,3 +504,286 @@ document.getElementById('resume-btn').addEventListener('click', togglePause);
 document.getElementById('home-btn').addEventListener('click', () => {
     window.location.reload();
 });
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2(0, 0); // Toujours le centre de l'écran en FPS
+window.addEventListener('mousedown', (event) => {
+    if (!controls.isLocked) return;
+
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+
+    if (intersects.length > 0) {
+        let objetTouche = intersects[0].object;
+        const distance = intersects[0].distance; // Distance entre toi et l'objet
+
+        // On cherche le parent qui a le nom du fichier .glb
+        while (objetTouche.parent && !catalogueFilms[objetTouche.name]) {
+            objetTouche = objetTouche.parent;
+        }
+
+        // Vérification du nom ET de la distance (ex: 3 mètres max)
+        if (catalogueFilms[objetTouche.name]) {
+            if (distance <= 3.5) { 
+                console.log("Objet valide touché :", objetTouche.name);
+                preparerSaisie(objetTouche.name);
+            } else {
+                console.log("Trop loin de l'objet :", Math.round(distance), "mètres");
+            }
+        }
+    }
+});
+function preparerSaisie(nomObjet) {
+    const overlay = document.getElementById('guess-overlay');
+    const input = document.getElementById('guess-input');
+    
+    controls.unlock(); // Libère la souris
+    overlay.style.display = 'flex';
+    input.value = "";
+    input.focus();
+
+    // On stocke l'ID de l'objet en cours pour la validation
+    overlay.dataset.currentObject = nomObjet;
+}
+
+const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+
+// 1. Génération de l'arc de cercle au chargement
+function genererLettresOuija() {
+    const container = document.getElementById('letters-arc');
+    const totalLettres = alphabet.length;
+
+    // Définition des deux rangées
+    const etages = [
+        { lettres: "ABCDEFGHIJKLM", pivot: "250px", bas: "120px", angle: 90 }, // Étage supérieur
+        { lettres: "NOPQRSTUVWXYZ", pivot: "180px", bas: "70px", angle: 115 }   // Étage inférieur
+    ];
+
+    etages.forEach((etage) => {
+        const chars = etage.lettres.split('');
+        const nb = chars.length;
+        const step = etage.angle / (nb - 1);
+        const start = -(etage.angle / 2);
+
+        chars.forEach((lettre, i) => {
+            const div = document.createElement('div');
+            div.className = 'ouija-letter';
+            div.innerText = lettre;
+
+            const angleRotation = start + (i * step);
+            
+            // On applique la hauteur et le pivot spécifique à l'étage
+            div.style.bottom = etage.bas;
+            div.style.transformOrigin = `50% ${etage.pivot}`;
+            div.style.transform = `translateX(-50%) rotate(${angleRotation}deg)`;
+
+            div.onclick = () => ajouterLettre(lettre, div); //
+            container.appendChild(div);
+        });
+    });
+    
+}
+
+function ouvrirOuija() {
+    controls.unlock();
+    document.getElementById('guess-overlay').style.display = 'flex';
+    tentativeActuelle = "";
+    document.getElementById('word-display').innerText = "";
+}
+
+window.fermerOuija = () => {
+    // 1. Cacher le grand overlay (qui contient le plateau)
+    const overlay = document.getElementById('guess-overlay');
+    if (overlay) overlay.style.display = 'none';
+
+    // 2. Réinitialiser la saisie pour la prochaine fois
+    tentativeActuelle = "";
+    const display = document.getElementById('word-display');
+    if (display) display.innerText = "";
+    
+    // 3. Remettre le titre original si besoin
+    const title = document.getElementById('ouija-title');
+    if (title) title.innerText = "COMMUNIEZ AVEC L'ESPRIT";
+
+    // 4. RÉACTIVER LES CONTRÔLES (Crucial pour Three.js)
+    if (controls && !controls.isLocked) {
+        controls.lock();
+    }
+};
+
+// 2. Interaction avec la planchette
+function ajouterLettre(lettre, element) {
+    tentativeActuelle += lettre;
+    document.getElementById('word-display').innerText = tentativeActuelle;
+    
+    // Déplacer la planchette vers la lettre
+    const planchette = document.getElementById('planchette');
+    const rect = element.getBoundingClientRect();
+    const boardRect = document.querySelector('.ouija-board').getBoundingClientRect();
+    
+    planchette.style.left = `${rect.left - boardRect.left + rect.width/2}px`;
+    planchette.style.top = `${rect.top - boardRect.top + rect.height/2}px`;
+
+    
+}
+
+
+document.getElementById('confirm-ouija').onclick = async () => {
+    const filmData = catalogueFilms[objetSurvoleNom];
+    const match = filmData.answers.some(a => a.replace(/\s/g, '').toLowerCase() === tentativeActuelle.replace(/\s/g, '').toLowerCase());
+
+    if (match) {
+        if (!objetsResolus.has(objetSurvoleNom)) {
+            objetsResolus.add(objetSurvoleNom);
+            nbObjetsTrouves++;
+            document.getElementById('objets-trouves').innerText = nbObjetsTrouves;
+
+            if (typeof updateSanityUI === "function") updateSanityUI(); 
+        }
+
+        const apiKey = "5e7b28ec91823044cb5c980b695d3d85";
+        const url = `https://api.themoviedb.org/3/find/${filmData.id}?api_key=${apiKey}&external_source=imdb_id&language=fr-FR`;
+
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+
+            if (data.movie_results && data.movie_results.length > 0) {
+                // On envoie le premier film trouvé à la fonction d'affichage
+                afficherFicheFilm(data.movie_results[0]); 
+            } else {
+                alert("Film trouvé dans le code, mais l'affiche est introuvable sur TMDB.");
+            }
+        } catch (error) {
+            console.error("Erreur TMDB:", error);
+        }
+        
+    } else {
+        alert("L'ESPRIT NE RECONNAÎT PAS CE NOM...");
+        tentativeActuelle = "";
+        document.getElementById('word-display').innerText = "";
+        
+        if (typeof updateSanityUI === "function") updateSanity(25);
+    }
+};
+
+function updateSanityUI() {
+    const fill = document.getElementById('sanity-fill');
+    if (fill) {
+        // On s'assure que la jauge ne descende pas en dessous de 0
+        if (santeMentale < 0) santeMentale = 0;
+        
+        fill.style.width = santeMentale + "%";
+
+        // Changement de couleur selon l'état critique
+        if (santeMentale <= 30) {
+            fill.style.background = "linear-gradient(90deg, #500, #b00)"; // Rouge sang
+        } else {
+            fill.style.background = "linear-gradient(90deg, #222, #444)"; // Gris sombre
+        }
+    }
+}
+
+// 3. Validation et connexion TMDB (Version Ultra-Stable)
+document.getElementById('confirm-ouija').onclick = async () => {
+    const filmData = catalogueFilms[objetSurvoleNom];
+    // On nettoie les espaces pour la comparaison
+    const saisie = tentativeActuelle.replace(/\s/g, '').toLowerCase();
+    const match = filmData.answers.some(a => a.replace(/\s/g, '').toLowerCase() === saisie);
+
+    if (match) {
+        // SUCCÈS : On gère le score et la santé
+        if (!objetsResolus.has(objetSurvoleNom)) {
+            objetsResolus.add(objetSurvoleNom);
+            nbObjetsTrouves++;
+            document.getElementById('objets-trouves').innerText = nbObjetsTrouves;
+            if (typeof updateSanityUI === "function") {
+                santeMentale = Math.min(100, santeMentale + 10); // Bonus de réussite !
+                updateSanityUI();
+            }
+        }
+
+        const apiKey = "5e7b28ec91823044cb5c980b695d3d85";
+        
+        try {
+            // ÉTAPE 1 : On tente par l'ID IMDb
+            const urlId = `https://api.themoviedb.org/3/find/${filmData.id}?api_key=${apiKey}&external_source=imdb_id&language=fr-FR`;
+            const respId = await fetch(urlId);
+            const dataId = await respId.json();
+
+            if (dataId.movie_results && dataId.movie_results.length > 0) {
+                afficherFicheFilm(dataId.movie_results[0]);
+            } 
+            else {
+                // ÉTAPE 2 : FALLBACK - Si l'ID échoue, on cherche par le nom
+                console.warn("ID non trouvé, tentative par nom...");
+                const nomRecherche = filmData.answers[0]; 
+                const urlSearch = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(nomRecherche)}&language=fr-FR`;
+                
+                const respSearch = await fetch(urlSearch);
+                const dataSearch = await respSearch.json();
+
+                if (dataSearch.results && dataSearch.results.length > 0) {
+                    afficherFicheFilm(dataSearch.results[0]);
+                } else {
+                    alert("L'esprit est confus : impossible de trouver l'affiche.");
+                }
+            }
+        } catch (error) {
+            console.error("Erreur TMDB:", error);
+        }
+        
+    } else {
+        // ÉCHEC
+        alert("L'ESPRIT RESTE MUET... CE N'EST PAS LE BON NOM.");
+        tentativeActuelle = "";
+        document.getElementById('word-display').innerText = "";
+        
+        santeMentale -= 20;
+        if (typeof updateSanityUI === "function") updateSanityUI();
+        
+        if (santeMentale <= 0) alert("VOTRE SANTÉ MENTALE EST ÉPUISÉE...");
+    }
+};
+
+async function afficherFicheFilm(movie) {
+    const card = document.getElementById('movie-info-card');
+    const content = document.getElementById('card-content');
+    
+    // TMDB utilise poster_path, title, et release_date (minuscules !)
+    const posterUrl = movie.poster_path 
+        ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
+        : "https://via.placeholder.com/200x300?text=Pas+d'image";
+
+    const annee = movie.release_date ? movie.release_date.split('-')[0] : "N/A";
+
+    content.innerHTML = `
+        <h2 style="color:#ff0000; font-family: 'Courier New'; margin:0; text-align: center">OBJET EXORCISÉ</h2>
+        <img src="${posterUrl}" style="width:160px; border: 2px solid #8b0000; margin: 10px auto; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
+        <h3 style="color:white; margin:0;">${movie.title} (${annee})</h3>
+        <p style="color:#ccc; font-size:0.85rem; font-style:italic; max-width:280px; margin: 10px auto; line-height:1.2;">
+            ${movie.overview || "L'histoire de cet objet reste nimbée de mystère..."}
+        </p>
+    `;
+    
+    document.querySelector('.ouija-container').style.display = 'none';
+    card.style.display = 'flex';
+}
+
+window.retourAuJeu = () => {
+    // 1. On cache la fiche et le grand overlay
+    document.getElementById('movie-info-card').style.display = 'none';
+    document.getElementById('guess-overlay').style.display = 'none';
+    
+    // 2. On remet le plateau en état pour le prochain objet
+    document.querySelector('.ouija-container').style.display = 'block';
+    tentativeActuelle = "";
+    document.getElementById('word-display').innerText = "";
+    
+    // 3. On redonne le contrôle au joueur
+    controls.lock(); 
+};
+
+// N'oublie pas d'appeler genererLettresOuija() au démarrage du script !
+genererLettresOuija();

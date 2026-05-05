@@ -19,13 +19,17 @@
         <button id="start-btn">VIVRE OU MOURIR. À TOI DE CHOISIR. </button>
     </div>
 </div>
-    <div id="lives-container">
-        <span class="life-icon">💀</span>
-        <span class="life-icon">💀</span>
-        <span class="life-icon">💀</span>
+    <div id="sanity-wrapper">
+        <div id="sanity-label">SANTÉ MENTALE</div>
+        <div id="sanity-gauge">
+            <div id="sanity-fill"></div>
+        </div>
     </div>
     <div id="ui-container">
         <div id="timer-display">15:00</div>
+    </div>
+    <div id="progression-container">
+        <span id="objets-trouves">0</span> / 25 OBJETS EXORCISÉS
     </div>
     <div id="pause-menu" style="display: none;">
     <div class="pause-content">
@@ -33,6 +37,38 @@
         <button id="resume-btn">REPRENDRE</button>
         <button id="home-btn">MENU PRINCIPAL</button>
     </div>
+</div>
+    <div id="guess-overlay" style="display:none;">
+    <div class="ouija-container">
+        <h2 id="ouija-title">COMMUNIEZ AVEC L'ESPRIT...</h2>
+        
+        <!-- Le mot qui se dessine -->
+        <div id="word-display"></div>
+
+        <div class="ouija-board">
+            <!-- La planchette qui bouge -->
+            <div id="planchette">
+                <div class="lens"></div>
+            </div>
+            
+            <!-- Les lettres seront générées ici par le JS -->
+            <div id="letters-arc"></div>
+        </div>
+
+        <div class="ouija-actions">
+            <button id="space-btn" onclick="ajouterEspace()">ESPACE</button>
+            <button onclick="effacerDerniereLettre()">NON</button>
+            <button id="confirm-ouija">OUI</button>
+            <button class="exit-btn" onclick="fermerOuija()">QUITTER</button>
+        </div>
+    </div>
+    <div id="movie-info-card" style="display:none;">
+    <div id="card-content"></div>
+    <button onclick="retourAuJeu()">CONTINUER L'EXPLORATION</button>
+</div>
+</div>
+<div id="interaction-prompt" style="display: none;">
+    Appuyez sur <span style="color: #8b0000; font-weight: bold;">[E]</span> pour examiner
 </div>
     <script type="module" src="/main.js"></script>
 </body>

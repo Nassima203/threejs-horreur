@@ -53,6 +53,7 @@ export default function importModel(scene) {
             // ✅ Succès
             (gltf) => {
                 const model = gltf.scene;
+                model.name = fichier.replace('.glb', '');
 
                 // Appliquer position
                 model.position.set(position.x, position.y, position.z);
