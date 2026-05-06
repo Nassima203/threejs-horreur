@@ -69,13 +69,13 @@ export default function importModel(scene) {
 
     // --- MASQUES collés aux murs, en hauteur ---
 
-    chargerModele('masque - scream.glb', {
+    chargerModele('scream.glb', {
         position: { x: -4.8, y: 2.5, z: -2 },   // mur gauche
         rotation: { x: 0, y: Math.PI / 2, z: 0 },
         scale:    { x: 1, y: 1, z: 1 },
     });
 
-    chargerModele('masque - vendredi 13.glb', {
+    chargerModele('jason.glb', {
         position: { x: 4.8, y: 2.5, z: -2 },    // mur droit
         rotation: { x: 0, y: -Math.PI / 2, z: 0 },
         scale:    { x: 0.8, y: 0.8, z: 0.8 },
