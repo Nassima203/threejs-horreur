@@ -70,21 +70,21 @@ export default function importModel(scene) {
     // --- MASQUES collés aux murs, en hauteur ---
 
     chargerModele('scream.glb', {
-        position: { x: -4.8, y: 2.5, z: -2 },   // mur gauche
-        rotation: { x: 0, y: Math.PI / 2, z: 0 },
-        scale:    { x: 1, y: 1, z: 1 },
-    });
+    position: { x: -4.8, y: 3, z: 0 },
+    rotation: { x: 0, y: Math.PI / 2, z: 0 },
+    scale:    { x: 0.03, y: 0.03, z: 0.03 },
+});
 
     chargerModele('jason.glb', {
-        position: { x: 4.8, y: 2.5, z: -2 },    // mur droit
-        rotation: { x: 0, y: -Math.PI / 2, z: 0 },
-        scale:    { x: 0.8, y: 0.8, z: 0.8 },
-    });
+    position: { x: 4.8, y: 2, z: 2 },
+    rotation: { x: 0, y: -Math.PI / 2, z: 0 },
+    scale:    { x: 0.04, y: 0.04, z: 0.04 },
+});
 
     chargerModele('myiers.glb', {
-        position: { x: -2, y: 2.5, z: -4.8 },   // mur du fond gauche
+        position: { x: -2, y: 2.5, z: -4 },   // mur du fond gauche
         rotation: { x: 0, y: 0, z: 0 },
-        scale:    { x: 1, y: 1, z: 1 },
+        scale:    { x: 0.01, y: 0.01, z: 0.01 },
     });
 
     chargerModele('masque sans les yeux.glb', {
