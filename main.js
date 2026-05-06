@@ -25,6 +25,12 @@ document.body.appendChild(renderer.domElement);
 
 // VARIABLES DU JEU
 
+const respiration = new Audio('assets/Human-breath.wav')
+respiration.loop = true;     // Le son recommence à l'infini
+respiration.volume = 0.10;   // Très bas pour que ce soit subtil et flippant
+
+
+
 let objetSurvoleNom = null;
 let tentativeActuelle = "";
 let tempsRestant = 900;
@@ -432,6 +438,12 @@ function animate() {
 }
 animate();
 
+window.addEventListener('click', () => {
+    if (respiration.paused) {
+        respiration.play().catch(err => console.log("L'audio attend un geste :", err));
+    }
+}, { once: true }); // S'exécute une seule fois
+
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
@@ -503,6 +515,7 @@ function togglePause() {
         pauseMenu.style.display = 'flex';
         controls.unlock(); // Bloque la caméra pour ne pas tricher
         console.log("Jeu en pause");
+        
     } else {
         // --- ON REPREND ---
         pauseMenu.style.display = 'none';
@@ -744,6 +757,11 @@ function updateSanityUI() {
         // Changement de couleur selon l'état critique
         if (santeMentale <= 30) {
             fill.style.background = "linear-gradient(90deg, #500, #b00)"; // Rouge sang
+            respiration.volume = 0.4; // Plus fort
+        respiration.playbackRate = 1.1; // Un tout petit peu plus rapide
+    } else {
+        respiration.volume = 0.15;
+        respiration.playbackRate = 1.0;
         } 
     }
 }
