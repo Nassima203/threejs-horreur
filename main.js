@@ -51,22 +51,22 @@ const catalogueFilms = {
         id: "10585",
         trivia: "Le nom complet de Chucky, Charles Lee Ray, est un assemblage macabre de trois tueurs célèbres : Charles Manson, Lee Harvey Oswald et James Earl Ray."
     },
-    "casque - martyrs": { 
+    "casque": { 
         answers: ["martyrs"], 
         id: "9539",
         trivia: "Le film est si extrême qu'à sa sortie en France, la commission de classification a d'abord voulu l'interdire aux moins de 18 ans avec avertissement, une rareté qui aurait tué sa carrière commerciale."
     },
-    "masque - scream": { 
+    "scream": { 
         answers: ["scream", "ghostface"], 
         id: "4232", // Pointe directement sur le film de 1996
         trivia: "Le masque de Ghostface n'a pas été créé pour le film. Il a été découvert par hasard par la productrice Marianne Maddalena dans un magasin de farces et attrapes lors de repérages."
     },
-    "masque - vendredi 13": { 
+    "jason": { 
         answers: ["vendredi 13", "friday the 13th", "jason voorhees"], 
         id: "4488",
         trivia: "L'actrice Betsy Palmer a accepté le rôle de la mère de Jason uniquement parce qu'elle avait besoin d'argent pour s'acheter une nouvelle voiture. Elle pensait que personne ne verrait ce film."
     },
-    "masque - le silence des agneaux": { 
+    "hannibal": { 
         answers: ["le silence des agneaux", "the silence of the lambs", "hannibal lecter"], 
         id: "274",
         trivia: "Anthony Hopkins ne cligne pratiquement jamais des yeux durant tout le film, une technique qu'il a apprise en observant des vidéos de reptiles pour rendre Hannibal Lecter plus inhumain."
@@ -86,7 +86,7 @@ const catalogueFilms = {
         id: "565",
         trivia: "Lors de la projection test, certains spectateurs étaient tellement terrifiés par la scène de la TV qu'ils ont quitté la salle en étant persuadés que leur propre téléviseur à la maison allait les maudire."
     },
-    "ballon - it": { 
+    "ballon": { 
         answers: ["it", "ça", "grippe-sou", "pennywise"], 
         id: "346364",
         trivia: "Pour terroriser les enfants acteurs, Bill Skarsgård a été gardé à l'écart du reste du casting jusqu'à sa première scène. Les pleurs et les cris des enfants à l'écran sont souvent de vraies réactions de peur."
@@ -101,12 +101,12 @@ const catalogueFilms = {
         id: "252171",
         trivia: "Le skate appartenait personnellement à la réalisatrice Ana Lily Amirpour. L'actrice Sheila Vand a dû s'entraîner pour apprendre à glisser en portant son tchador, symbolisant la liberté de son personnage."
     },
-    "casque - the descent": { 
+    "casque_descent": { 
         answers: ["the descent"], 
         id: "9392",
         trivia: "Pour obtenir une peur authentique, les actrices n'ont jamais vu les Crawlers avant le premier jour de tournage de leur rencontre. La panique lors de la première attaque est réelle."
     },
-    "chaise -conjuring": { 
+    "chaise": { 
         answers: ["the conjuring", "les dossiers warren"], 
         id: "138843", 
         trivia: "La véritable famille Perron a visité le plateau, mais un vent violent s'est levé soudainement, renversant tout le matériel, alors que les arbres à quelques mètres restaient immobiles."
@@ -121,7 +121,7 @@ const catalogueFilms = {
         id: "9552",
         trivia: "Le plateau de tournage de la maison a entièrement brûlé dans un incendie mystérieux, sauf la chambre de Regan, qui est restée intacte alors que tout le reste était en cendres."
     },
-    "masque micheal myers": { 
+    "myiers": { 
         answers: ["halloween", "michael myers"], 
         id: "948",
         trivia: "Faute de budget, l'équipe a acheté un masque du capitaine Kirk (Star Trek) pour quelques dollars, l'a peint en blanc et a élargi les yeux pour créer le visage de Michael Myers."
@@ -131,7 +131,7 @@ const catalogueFilms = {
         id: "16938",
         trivia: "Ce film a inventé le concept de l'appel qui vient de l'intérieur de la maison. C'est le précurseur direct de Halloween et de tous les slashers modernes."
     },
-    "rideau de douche-psychose": { 
+    "rideau": { 
         answers: ["psychose", "psycho"], 
         id: "539",
         trivia: "Pour la célèbre scène de la douche, Alfred Hitchcock a utilisé du sirop de chocolat pour simuler le sang, car sa densité passait mieux en noir et blanc que les colorants classiques."
@@ -141,7 +141,7 @@ const catalogueFilms = {
         id: "176",
         trivia: "Le budget était si serré que James Wan a fabriqué lui-même la marionnette Billy à partir de vieux journaux, d'essuie-tout et de balles de ping-pong pour les yeux."
     },
-    "tenue de clown-hell house": { 
+    "clown": { 
         answers: ["hell house", "hell house llc"], 
         id: "359246",
         trivia: "Le tournage a eu lieu dans une véritable attraction hantée. L'équipe raconte que certains mannequins changeaient de place d'eux-mêmes entre les prises."
@@ -156,10 +156,13 @@ const catalogueFilms = {
         id: "694",
         trivia: "Shelley Duvall a été tellement poussée à bout par Stanley Kubrick (plus de 120 prises pour certaines scènes) que ses cheveux ont commencé à tomber à cause du stress extrême."
     },
-    "TV - poltergeist": { 
+    "TV": { 
         answers: ["poltergeist"], 
         id: "609",
         trivia: "Le film est réputé maudit. Une anecdote révèle que la production a utilisé de vrais squelettes humains pour la scène de la piscine car ils coûtaient moins cher que les modèles en plastique."
+    },
+    "panneau": {
+
     }
 };
 
