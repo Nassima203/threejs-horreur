@@ -65,7 +65,7 @@ html, body{
 #timer-display {
     font-family: 'Courier New', Courier, monospace; /* Style rétro/machine à écrire */
     font-size: 2.5rem;
-    color: #8b0000; /* Rouge sang sombre */
+    color: white;
     text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
     font-weight: bold;
 }
@@ -160,7 +160,8 @@ html, body{
     position: absolute;
     bottom: 20px;
     right: 20px;
-    color: #8b0000;
+    color: white;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
     font-family: 'Courier New', monospace;
     font-size: 1.2rem;
     font-weight: bold;
@@ -171,7 +172,7 @@ html, body{
 
 #objets-trouves {
     font-size: 1.8rem;
-    color: #ff0000;
+    color: white;
 }
 
 #guess-overlay {
