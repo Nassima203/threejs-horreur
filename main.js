@@ -325,7 +325,7 @@ frontWall.position.set(0, 2.5, 5);
 frontWall.receiveShadow = true;
 scene.add(frontWall);
 
-// Plafond (Applique le matériau texturé directement ici)
+// Plafond 
 const ceiling = new THREE.Mesh(new THREE.PlaneGeometry(10, 10), ceilingMat);
 ceiling.position.y = 5;
 ceiling.rotation.x = Math.PI / 2;
@@ -693,6 +693,7 @@ if (btnNon) {
     };
 }
 
+
 document.getElementById('confirm-ouija').onclick = async () => {
     const filmData = catalogueFilms[objetSurvoleNom];
     const match = filmData.answers.some(a => a.replace(/\s/g, '').toLowerCase() === tentativeActuelle.replace(/\s/g, '').toLowerCase());
@@ -743,9 +744,7 @@ function updateSanityUI() {
         // Changement de couleur selon l'état critique
         if (santeMentale <= 30) {
             fill.style.background = "linear-gradient(90deg, #500, #b00)"; // Rouge sang
-        } else {
-            fill.style.background = "linear-gradient(90deg, #222, #444)"; // Gris sombre
-        }
+        } 
     }
 }
 
