@@ -220,5 +220,11 @@ export default function importModel(scene) {
         scale:    { x: 0.9, y: 0.9, z: 0.9 },
     });
 
+    chargerModele('persian.glb', {
+        rotation: { x: 0, y: 0, z: 0 },
+        position: { x: 1.8, y: 0.3, z: 0.5 },
+        scale:    { x: 6, y: 6, z:6},
+    });
+
 
 }   
