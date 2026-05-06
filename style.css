@@ -185,8 +185,11 @@ html, body{
 .ouija-container { text-align: center; width: 800px; }
 
 #word-display {
-    font-size: 2.5rem; letter-spacing: 10px; margin-bottom: 30px;
-    height: 50px; border-bottom: 2px solid #444; color: #fff;
+    font-size: 2.5rem; 
+    letter-spacing: 5px; 
+    margin-bottom: 30px;
+    height: 50px; 
+    border-bottom: 2px solid #444; color: #fff;
 }
 
 #letters-arc{
@@ -223,6 +226,36 @@ html, body{
 .ouija-letter:hover { 
     color: #ff0000; 
     text-shadow: 0 0 10px red; 
+}
+#confirm-ouija { 
+    position: absolute;
+    top: 400px;   /* Ajuste selon la courbe de ton arche */
+    left: 500px;
+    font-size: 1.5rem;
+    color: #d4bc8d; /* La couleur bois/os de ta planche */
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Le bouton NON (NO) en haut à droite */
+#btn-non { 
+    position: absolute;
+    top: 400px;
+    right: 500px;
+    font-size: 1.5rem;
+    color: #d4bc8d;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* On garde ESPACE et QUITTER en bas, centrés */
+.ouija-actions-bottom {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 40px;
 }
 
 #planchette {
@@ -306,3 +339,62 @@ html, body{
     color: white;
     box-shadow: 0 0 10px #ff0000;
 }
+
+/* Flash de "douleur" ou d'erreur */
+#blood-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: radial-gradient(circle, transparent 20%, rgba(150, 0, 0, 0.7) 100%);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 9999;
+}
+
+.flash-hit {
+    animation: blood-flash 0.6s ease-out;
+}
+
+@keyframes blood-flash {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Tremblement de la planche */
+.shake-element {
+    animation: shake 0.4s double-linear infinite;
+}
+
+@keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    20% { transform: translate(-2px, 0px) rotate(-1deg); }
+    40% { transform: translate(-1px, -1px) rotate(1deg); }
+    60% { transform: translate(2px, 1px) rotate(0deg); }
+    100% { transform: translate(1px, -1px) rotate(-1deg); }
+}
+
+#game-over-screen {
+    display: none; /* Caché par défaut */
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: black;
+    color: #8b0000;
+    z-index: 10000; /* Au-dessus de ABSOLUMENT TOUT */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+}
+
+.death-content h1 { font-size: 3rem; letter-spacing: 5px; }
+.death-content button {
+    background: transparent;
+    border: 1px solid #444;
+    color: #444;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+.death-content button:hover { border-color: #8b0000; color: #8b0000; }

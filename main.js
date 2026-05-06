@@ -53,7 +53,7 @@ const catalogueFilms = {
     },
     "casque - martyrs": { 
         answers: ["martyrs"], 
-        id: "15438",
+        id: "9539",
         trivia: "Le film est si extrême qu'à sa sortie en France, la commission de classification a d'abord voulu l'interdire aux moins de 18 ans avec avertissement, une rareté qui aurait tué sa carrière commerciale."
     },
     "masque - scream": { 
@@ -77,8 +77,8 @@ const catalogueFilms = {
         trivia: "Wes Craven a eu l'idée de Freddy en lisant des articles de presse sur des réfugiés cambodgiens décédés en plein cauchemar, un phénomène médical réel appelé syndrome de la mort subite inexpliquée."
     },
     "botte": { 
-        answers: ["wolf creek"], 
-        id: "9813",
+        answers: ["I know what you did last summer", "Souviens toi l'été dernier"], 
+        id: "3597",
         trivia: "Le personnage de Mick Taylor est largement inspiré d'Ivan Milat, le tristement célèbre tueur de routards qui a sévi en Australie dans les années 90."
     },
     "cassette the ring": { 
@@ -650,6 +650,45 @@ function ajouterLettre(lettre, element) {
     
 }
 
+// On récupère le bouton Espace par son ID
+const boutonEspace = document.getElementById('space-btn');
+
+if (boutonEspace) {
+    boutonEspace.onclick = () => {
+        // 1. On ajoute un espace à la chaîne de caractères
+        tentativeActuelle += "\u2009";;
+        
+        // 2. On met à jour l'affichage visuel pour le joueur
+        const wordDisplay = document.getElementById('word-display');
+        if (wordDisplay) {
+            wordDisplay.innerText = tentativeActuelle;
+        }
+        
+        // Petit effet sonore si tu en as un pour les touches
+        // if (typeof soundClick !== 'undefined') soundClick.play();
+    };
+}
+
+// bouton pour effacer une lettre 
+const btnNon = document.getElementById('btn-non');
+
+if (btnNon) {
+    btnNon.onclick = () => {
+        if (tentativeActuelle.length > 0) {
+            // 1. On retire le dernier caractère (la dernière lettre)
+            tentativeActuelle = tentativeActuelle.slice(0, -1);
+
+            // 2. On met à jour l'affichage visuel
+            const wordDisplay = document.getElementById('word-display');
+            if (wordDisplay) {
+                wordDisplay.innerText = tentativeActuelle;
+            }
+
+            // 3. Optionnel : un petit son de "clic" ou de "frottement"
+            // if (typeof soundBack !== 'undefined') soundBack.play();
+        }
+    };
+}
 
 document.getElementById('confirm-ouija').onclick = async () => {
     const filmData = catalogueFilms[objetSurvoleNom];
@@ -707,8 +746,22 @@ function updateSanityUI() {
     }
 }
 
+function gameOver() {
+    console.log("FONCTION GAME OVER DÉCLENCHÉE"); // Pour vérifier dans la console
+    const screen = document.getElementById('game-over-screen');
+    
+    if (screen) {
+        screen.style.display = 'flex'; // On force l'affichage
+        screen.style.opacity = '1';
+    } else {
+        console.error("Erreur : L'élément 'game-over-screen' est introuvable dans le HTML !");
+    }
+}
+
 // 3. Validation et connexion TMDB (Version Ultra-Stable)
 document.getElementById('confirm-ouija').onclick = async () => {
+    if (santeMentale <= 0) return;
+
     const filmData = catalogueFilms[objetSurvoleNom];
     // On nettoie les espaces pour la comparaison
     const saisie = tentativeActuelle.replace(/\s/g, '').toLowerCase();
@@ -751,7 +804,10 @@ document.getElementById('confirm-ouija').onclick = async () => {
         santeMentale -= 20;
         if (typeof updateSanityUI === "function") updateSanityUI();
         
-        if (santeMentale <= 0) alert("VOTRE SANTÉ MENTALE EST ÉPUISÉE...");
+        if (santeMentale <= 0) {
+        alert("VOTRE SANTÉ MENTALE EST ÉPUISÉE...")
+        gameOver();
+        }
     }
 };
 
@@ -829,3 +885,4 @@ window.retourAuJeu = () => {
 
 // N'oublie pas d'appeler genererLettresOuija() au démarrage du script !
 genererLettresOuija();
+
