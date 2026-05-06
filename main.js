@@ -48,98 +48,120 @@ const direction = new THREE.Vector3();
 const catalogueFilms = {
     "chucky": { 
         answers: ["chucky", "child's play", "jeu d'enfant"], 
-        id: "tt0094862" 
+        id: "10585",
+        trivia: "Le nom complet de Chucky, Charles Lee Ray, est un assemblage macabre de trois tueurs célèbres : Charles Manson, Lee Harvey Oswald et James Earl Ray."
     },
     "casque - martyrs": { 
         answers: ["martyrs"], 
-        id: "tt1029234" 
+        id: "15438",
+        trivia: "Le film est si extrême qu'à sa sortie en France, la commission de classification a d'abord voulu l'interdire aux moins de 18 ans avec avertissement, une rareté qui aurait tué sa carrière commerciale."
     },
     "masque - scream": { 
         answers: ["scream", "ghostface"], 
-        id: "tt0117588" 
+        id: "4232", // Pointe directement sur le film de 1996
+        trivia: "Le masque de Ghostface n'a pas été créé pour le film. Il a été découvert par hasard par la productrice Marianne Maddalena dans un magasin de farces et attrapes lors de repérages."
     },
     "masque - vendredi 13": { 
         answers: ["vendredi 13", "friday the 13th", "jason voorhees"], 
-        id: "tt0080761" 
+        id: "4488",
+        trivia: "L'actrice Betsy Palmer a accepté le rôle de la mère de Jason uniquement parce qu'elle avait besoin d'argent pour s'acheter une nouvelle voiture. Elle pensait que personne ne verrait ce film."
     },
     "masque - le silence des agneaux": { 
         answers: ["le silence des agneaux", "the silence of the lambs", "hannibal lecter"], 
-        id: "tt0102926" 
+        id: "274",
+        trivia: "Anthony Hopkins ne cligne pratiquement jamais des yeux durant tout le film, une technique qu'il a apprise en observant des vidéos de reptiles pour rendre Hannibal Lecter plus inhumain."
     },
     "chapeau krugger": { 
         answers: ["freddy", "les griffes de la nuit", "a nightmare on elm street"], 
-        id: "tt0087800" 
+        id: "377",
+        trivia: "Wes Craven a eu l'idée de Freddy en lisant des articles de presse sur des réfugiés cambodgiens décédés en plein cauchemar, un phénomène médical réel appelé syndrome de la mort subite inexpliquée."
     },
     "botte": { 
-        answers: ["wolf creek"], // Si c'est la botte de Mick Taylor
-        id: "tt0429247" 
+        answers: ["wolf creek"], 
+        id: "9813",
+        trivia: "Le personnage de Mick Taylor est largement inspiré d'Ivan Milat, le tristement célèbre tueur de routards qui a sévi en Australie dans les années 90."
     },
     "cassette the ring": { 
         answers: ["the ring", "le cercle", "samara"], 
-        id: "tt0298130" 
+        id: "565",
+        trivia: "Lors de la projection test, certains spectateurs étaient tellement terrifiés par la scène de la TV qu'ils ont quitté la salle en étant persuadés que leur propre téléviseur à la maison allait les maudire."
     },
     "ballon - it": { 
         answers: ["it", "ça", "grippe-sou", "pennywise"], 
-        id: "tt1396484" 
+        id: "346364",
+        trivia: "Pour terroriser les enfants acteurs, Bill Skarsgård a été gardé à l'écart du reste du casting jusqu'à sa première scène. Les pleurs et les cris des enfants à l'écran sont souvent de vraies réactions de peur."
     },
     "animatronix": { 
         answers: ["fnaf", "five nights at freddy's"], 
-        id: "tt4589256" 
+        id: "507089",
+        trivia: "Scott Cawthon, le créateur, a eu l'idée du jeu après que les critiques ont qualifié les personnages de son précédent jeu trop effrayants et ressemblant à des automates défectueux."
     },
     "skate": { 
-        answers: ["it", "ça", "georgie"], 
-        id: "tt1396484" 
+        answers: ["a girl walks home alone at night", "bad city"], 
+        id: "252171",
+        trivia: "Le skate appartenait personnellement à la réalisatrice Ana Lily Amirpour. L'actrice Sheila Vand a dû s'entraîner pour apprendre à glisser en portant son tchador, symbolisant la liberté de son personnage."
     },
     "casque - the descent": { 
         answers: ["the descent"], 
-        id: "tt0435625" 
+        id: "9392",
+        trivia: "Pour obtenir une peur authentique, les actrices n'ont jamais vu les Crawlers avant le premier jour de tournage de leur rencontre. La panique lors de la première attaque est réelle."
     },
     "chaise -conjuring": { 
         answers: ["the conjuring", "les dossiers warren"], 
-        id: "tt1457767" 
+        id: "138843", 
+        trivia: "La véritable famille Perron a visité le plateau, mais un vent violent s'est levé soudainement, renversant tout le matériel, alors que les arbres à quelques mètres restaient immobiles."
     },
     "masque sans les yeux": { 
-        answers: ["eyes without a face", "les yeux sans visage"], // Ressemble au masque de dollface
-        id: "tt0053459" 
+        answers: ["eyes without a face", "les yeux sans visage"], 
+        id: "5432",
+        trivia: "Ce film est le grand-père du slasher moderne. John Carpenter a avoué que le masque blanc inexpressif de Michael Myers dans Halloween est directement inspiré de ce film français."
     },
     "robe de chambre exorciste": { 
         answers: ["lexorciste", "the exorcist", "regan"], 
-        id: "tt0070047" 
+        id: "9552",
+        trivia: "Le plateau de tournage de la maison a entièrement brûlé dans un incendie mystérieux, sauf la chambre de Regan, qui est restée intacte alors que tout le reste était en cendres."
     },
     "masque micheal myers": { 
         answers: ["halloween", "michael myers"], 
-        id: "tt0077651" 
+        id: "948",
+        trivia: "Faute de budget, l'équipe a acheté un masque du capitaine Kirk (Star Trek) pour quelques dollars, l'a peint en blanc et a élargi les yeux pour créer le visage de Michael Myers."
     },
     "oeil-blackchristmas": { 
         answers: ["black christmas"], 
-        id: "tt0071222" 
+        id: "16938",
+        trivia: "Ce film a inventé le concept de l'appel qui vient de l'intérieur de la maison. C'est le précurseur direct de Halloween et de tous les slashers modernes."
     },
     "rideau de douche-psychose": { 
         answers: ["psychose", "psycho"], 
-        id: "tt0054215" 
+        id: "539",
+        trivia: "Pour la célèbre scène de la douche, Alfred Hitchcock a utilisé du sirop de chocolat pour simuler le sang, car sa densité passait mieux en noir et blanc que les colorants classiques."
     },
     "noeud_papillon_saw": { 
         answers: ["saw", "jigsaw"], 
-        id: "tt0387564" 
+        id: "176",
+        trivia: "Le budget était si serré que James Wan a fabriqué lui-même la marionnette Billy à partir de vieux journaux, d'essuie-tout et de balles de ping-pong pour les yeux."
     },
     "tenue de clown-hell house": { 
         answers: ["hell house", "hell house llc"], 
-        id: "tt5073948" 
+        id: "359246",
+        trivia: "Le tournage a eu lieu dans une véritable attraction hantée. L'équipe raconte que certains mannequins changeaient de place d'eux-mêmes entre les prises."
     },
     "mitaines_terrifier": { 
         answers: ["terrifier", "art the clown"], 
-        id: "tt3503448" 
+        id: "420634",
+        trivia: "David Howard Thornton, qui joue Art le Clown, a une formation de mime. Il a décroché le rôle en improvisant une décapitation silencieuse avec un plaisir immense."
     },
     "tricycle shinning": { 
         answers: ["the shining", "shining"], 
-        id: "tt0081505" 
+        id: "694",
+        trivia: "Shelley Duvall a été tellement poussée à bout par Stanley Kubrick (plus de 120 prises pour certaines scènes) que ses cheveux ont commencé à tomber à cause du stress extrême."
     },
     "TV - poltergeist": { 
         answers: ["poltergeist"], 
-        id: "tt0084503" 
+        id: "609",
+        trivia: "Le film est réputé maudit. Une anecdote révèle que la production a utilisé de vrais squelettes humains pour la scène de la piscine car ils coûtaient moins cher que les modèles en plastique."
     }
 };
-
 
 // Système de contrôles
 
@@ -708,28 +730,14 @@ document.getElementById('confirm-ouija').onclick = async () => {
         
         try {
             // ÉTAPE 1 : On tente par l'ID IMDb
-            const urlId = `https://api.themoviedb.org/3/find/${filmData.id}?api_key=${apiKey}&external_source=imdb_id&language=fr-FR`;
+            const urlId = `https://api.themoviedb.org/3/movie/${filmData.id}?api_key=${apiKey}&language=fr-FR&append_to_response=credits`;
             const respId = await fetch(urlId);
             const dataId = await respId.json();
 
-            if (dataId.movie_results && dataId.movie_results.length > 0) {
-                afficherFicheFilm(dataId.movie_results[0]);
+            if (dataId && dataId.id) {
+                afficherFicheFilm(dataId);
             } 
-            else {
-                // ÉTAPE 2 : FALLBACK - Si l'ID échoue, on cherche par le nom
-                console.warn("ID non trouvé, tentative par nom...");
-                const nomRecherche = filmData.answers[0]; 
-                const urlSearch = `https://api.themoviedb.org/3/search/movie?api_key=${apiKey}&query=${encodeURIComponent(nomRecherche)}&language=fr-FR`;
-                
-                const respSearch = await fetch(urlSearch);
-                const dataSearch = await respSearch.json();
-
-                if (dataSearch.results && dataSearch.results.length > 0) {
-                    afficherFicheFilm(dataSearch.results[0]);
-                } else {
-                    alert("L'esprit est confus : impossible de trouver l'affiche.");
-                }
-            }
+           
         } catch (error) {
             console.error("Erreur TMDB:", error);
         }
@@ -750,21 +758,55 @@ document.getElementById('confirm-ouija').onclick = async () => {
 async function afficherFicheFilm(movie) {
     const card = document.getElementById('movie-info-card');
     const content = document.getElementById('card-content');
+
+    const director = movie.credits.crew.find(person => person.job === 'Director')?.name || "Inconnu";
+    const runtime = movie.runtime ? `${movie.runtime} min` : "N/A";
+    const genres = movie.genres.map(g => g.name).slice(0, 2).join(', '); // On en prend max 2
+    const annee = movie.release_date ? movie.release_date.split('-')[0] : "N/A";
+    const triviaText = catalogueFilms[objetSurvoleNom].trivia;
     
     // TMDB utilise poster_path, title, et release_date (minuscules !)
     const posterUrl = movie.poster_path 
         ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
         : "https://via.placeholder.com/200x300?text=Pas+d'image";
 
-    const annee = movie.release_date ? movie.release_date.split('-')[0] : "N/A";
 
     content.innerHTML = `
-        <h2 style="color:#ff0000; font-family: 'Courier New'; margin:0; text-align: center">OBJET EXORCISÉ</h2>
-        <img src="${posterUrl}" style="width:160px; border: 2px solid #8b0000; margin: 10px auto; box-shadow: 0 0 15px rgba(255,0,0,0.5);">
-        <h3 style="color:white; margin:0;">${movie.title} (${annee})</h3>
-        <p style="color:#ccc; font-size:0.85rem; font-style:italic; max-width:280px; margin: 10px auto; line-height:1.2;">
-            ${movie.overview || "L'histoire de cet objet reste nimbée de mystère..."}
-        </p>
+        <div style="display: flex; gap: 30px; align-items: stretch; text-align: left;">
+            
+            <!-- COLONNE GAUCHE : Affiche -->
+            <div style="flex: 0 0 240px;">
+                <img src="${posterUrl}" style="width: 100%; border: 3px solid #600; box-shadow: 0 0 20px rgba(0,0,0,0.8); border-radius: 2px;">
+            </div>
+
+            <!-- COLONNE DROITE : Infos et Anecdote -->
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                
+                <div>
+                    <h2 style="color: #8b0000; font-family: 'Courier New', monospace; font-size: 0.9rem; margin: 0; letter-spacing: 2px; text-transform: uppercase;">
+                        — OBJET EXORCISÉ —
+                    </h2>
+                    <h1 style="color: white; font-family: 'Georgia', serif; font-size: 2.2rem; margin: 5px 0 15px 0; text-transform: uppercase; border-bottom: 1px solid #444; padding-bottom: 10px;">
+                        ${movie.title} <span style="color: #666; font-size: 1.2rem;">(${annee})</span>
+                    </h1>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; font-size: 0.85rem; color: #bbb;">
+                        <p style="margin: 0;"><strong>🎬 RÉALISATEUR:</strong><br><span style="color: #eee;">${director}</span></p>
+                        <p style="margin: 0;"><strong>⏳ DURÉE:</strong><br><span style="color: #eee;">${runtime}</span></p>
+                        <p style="margin: 0; grid-column: span 2;"><strong>🏷️ GENRE:</strong><br><span style="color: #eee;">${genres}</span></p>
+                    </div>
+                </div>
+
+                <div style="background: rgba(139, 0, 0, 0.05); border-left: 4px solid #8b0000; padding: 15px; margin-top: 10px;">
+                    <p style="color: #ffd700; font-family: 'Courier New', monospace; font-size: 0.75rem; margin: 0 0 8px 0; font-weight: bold; text-transform: uppercase;">
+                        [ Rapport d'exorcisme ]
+                    </p>
+                    <p style="color: #ddd; font-style: italic; line-height: 1.5; font-size: 0.95rem; margin: 0;">
+                        "${triviaText}"
+                    </p>
+                </div>
+            </div>
+        </div>
     `;
     
     document.querySelector('.ouija-container').style.display = 'none';

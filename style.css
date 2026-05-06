@@ -132,7 +132,7 @@ html, body{
 }
 
 #sanity-label {
-    color: #8b0000;
+    color: white;
     font-family: 'Courier New', monospace;
     font-size: 0.9rem;
     margin-bottom: 5px;
@@ -286,7 +286,7 @@ html, body{
     color: #eee;
     font-family: 'Courier New', Courier, monospace;
     border-radius: 5px;
-    width: 30%;
+    width: 800px;
 }
 
 #movie-info-card button {
