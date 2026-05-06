@@ -219,6 +219,10 @@ export default function importModel(scene) {
         rotation: { x: 0, y: 0, z: 0 },
         scale:    { x: 0.9, y: 0.9, z: 0.9 },
     });
+    chargerModele('persian_rug.glb', {
+        position: { x: 1.8, y: 0.3, z: 0.5 },
+        scale:    { x: 0.01, y: 0.01, z:0.01 },
+    });
 
 
 }   
