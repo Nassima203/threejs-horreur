@@ -216,29 +216,7 @@ ceiling.position.y = 5;
 ceiling.rotation.x = Math.PI / 2;
 scene.add(ceiling);
 
-/**
- * 6. LA PORTE & LE TROU NOIR
- */
-const hP = 3.5; 
-const lP = 1.5;
 
-const portePivot = new THREE.Group();
-portePivot.position.set(-4.95, 0, 3);
-portePivot.rotation.y = (Math.PI / 2) + 0.4;
-scene.add(portePivot);
-
-const porteMesh = new THREE.Mesh(new THREE.BoxGeometry(lP, hP, 0.1), porteMat);
-porteMesh.position.set(0, hP/2, lP/2);
-porteMesh.castShadow = true;
-portePivot.add(porteMesh);
-
-const noirMesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(lP * 1.5, hP * 1.1),
-    new THREE.MeshBasicMaterial({ color: 0x000000 })
-);
-noirMesh.position.set(-5.1, hP/2, 3 + lP/2);
-noirMesh.rotation.y = Math.PI / 2;
-scene.add(noirMesh);
 
 
 /**
