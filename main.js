@@ -218,7 +218,6 @@ scene.add(ceiling);
 
 
 
-
 /**
  * 7. OBJETS
  */

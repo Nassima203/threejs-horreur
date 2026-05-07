@@ -101,7 +101,7 @@ export default function importModel(scene) {
 
     // --- CHAPEAU — mur gauche en hauteur ---
     chargerModele('chapeau krugger.glb', {
-    position: { x: -4.8, y: 2.5, z: 1 },
+    position: { x: -4.8, y: 2.5, z: 4.4 },
     rotation: { x: 0, y: Math.PI / 2, z: -Math.PI / 2 },
     scale:    { x: 0.7, y: 0.7, z: 0.7 },
 });
@@ -165,11 +165,11 @@ export default function importModel(scene) {
         scale:    { x: 2, y: 2, z: 2 },
     });
 
-    chargerModele('oeil-blackchristmas.glb', {
-        position: { x: -4.8, y: 1.75, z: 3.75 },
-        rotation: { x: 0, y: Math.PI / 2, z: 0 },
-        scale:    { x: 0.1, y: 0.1, z: 0.1 },
-    });
+    //chargerModele('oeil-blackchristmas.glb', {
+        //position: { x: -4.8, y: 1.75, z: 3.75 },
+        //rotation: { x: 0, y: Math.PI / 2, z: 0 },
+        //scale:    { x: 0.1, y: 0.1, z: 0.1 },
+    //});
 
     // --- RIDEAU ---
     chargerModele('rideau.glb', {
@@ -184,19 +184,19 @@ export default function importModel(scene) {
     });
 
     chargerModele('noeud_papillon_saw.glb', {
-    position: { x: 5, y: 1.3, z: 7 },
+    position: { x: 3, y: 0.7, z: 4.7 },
     scale: { x: 0.5, y: 0.5, z: 0.5 },
     });
 
     chargerModele('chapeau krugger.glb', {
-        position: { x: 1, y: 1.5, z: -4 },
+        position: { x: 1, y: 1.5, z: -5.90 },
         rotation: { x: 0, y: Math.PI / 2, z: -Math.PI / 2 },
         scale:    { x: 0.7, y: 0.7, z: 0.7 },
     });
 
     // --- GANTS ---
     chargerModele('mitaines_terrifier.glb', {
-        position: { x: 1, y: 0, z: 0.5 },
+        position: { x: 2.2, y: 0.08, z: 4.75 },
         scale:    { x: 0.3, y: 0.3, z: 0.3 },
     });
 
@@ -220,22 +220,22 @@ export default function importModel(scene) {
         scale:    { x: 0.9, y: 0.9, z: 0.9 },
     });
 
-        chargerModele('persian_rug.glb', {
-        position: { x: 0, y: 0.6, z: 0 },
-        rotation: { x: 0, y: 0, z: -Math.PI / 2 },
-        scale:    { x: 2, y: 2, z: 2 },
-    });
+        //chargerModele('persian_rug.glb', {
+        //position: { x: 0, y: 0.15, z: 0.2 },
+        //rotation: { x: 0.13, y: 0.13, z: -Math.PI / 2 },
+        //scale:    { x: 2, y: 2, z: 2 },
+    //});
 
     chargerModele('Wooden_door.glb', {
-    position: { x: 0, y: 1.8, z: 4.5 },
+    position: { x: 0, y: 1.5, z: 4.96 },
     rotation: { x: 0, y: Math.PI/2, z: 0 },
     scale:    { x: 1.5, y: 1.5, z: 1.5 },
     })
 
-    //hargerModele('basic_bookcase.glb', {
-    //position: { x: 0, y: 0, z: 4.5 },
-    //rotation: { x: 0, y: Math.PI, z: 0 },
-    //scale:    { x: 0.4, y: 0.4, z: 0.4 },
-    //})
+    chargerModele('basic_bookcase.glb', {
+    position: { x: 3, y: 0, z: 4.85 },
+    rotation: { x: 0, y: Math.PI, z: 0 },
+    scale:    { x: 0.4, y: 0.4, z: 0.4 },
+    })
 }   
 
