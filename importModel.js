@@ -56,7 +56,7 @@ export default function importModel(scene) {
     // =========================================================
 
     chargerModele('chucky.glb', {
-        position: { x: 0, y: 0, z: 0 },
+        position: { x: -2, y: 0, z: 0 },
         rotation: { x: 0, y: Math.PI, z: 0 },
         scale:    { x: 1, y: 1, z: 1 },
     });
@@ -101,7 +101,7 @@ export default function importModel(scene) {
 
     // --- CHAPEAU — mur gauche en hauteur ---
     chargerModele('chapeau krugger.glb', {
-    position: { x: -4.8, y: 2.5, z: 4.4 },
+    position: { x: 0.5, y: 2.5, z: 4.96 },
     rotation: { x: 0, y: Math.PI / 2, z: -Math.PI / 2 },
     scale:    { x: 0.7, y: 0.7, z: 0.7 },
 });
@@ -109,22 +109,23 @@ export default function importModel(scene) {
     chargerModele('clown.glb', {
     position: { x: -4.8, y: 0.5, z: 0 },
     rotation: { x: 0, y: Math.PI / 2, z: 0 },
-    scale:    { x: 0.02, y: 0.02, z: 0.02 },
+    scale:    { x: 0.02, y: 0.02, z: 0. },
 });
     // --- BOTTE — plus petite, décalée à gauche ---
     chargerModele('botte.glb', {
-        position: { x: -2, y: 0, z: 1 },
+        position: { x: -3, y: 0.06, z: 1.5 },
+        rotation: { x: -Math.PI / 2, y: 0, z: Math.PI / 4 },
         scale:    { x: 0.6, y: 0.6, z: 0.6 },
     });
 
     // --- CASSETTE — à côté des gants ---
     chargerModele('cassette the ring.glb', {
-        position: { x: 1.8, y: 0.3, z: 0.5 },
+        position: { x: 0, y: 1.03, z:0 },
         scale:    { x: 0.5, y: 0.5, z:0.5 },
     });
 
     chargerModele('ballon.glb', {
-        position: { x: 2, y: 3, z: 0 },
+        position: { x: 2, y: 2.5, z: 0 },
         scale:    { x: 0.02, y: 0.02, z: 0.02 },
     });
 
@@ -141,7 +142,7 @@ export default function importModel(scene) {
    // });
 
     chargerModele('skate.glb', {          
-    position: { x: 3, y: 0, z: 2 },
+    position: { x: 0.6, y: 0, z: 0.62 },
     scale: { x: 1, y: 1, z: 1 },
     });
 
@@ -153,8 +154,8 @@ export default function importModel(scene) {
 });
 
     chargerModele('chaise.glb', {
-        position: { x: 3, y: 0, z: -4 },
-        rotation: { x: 0, y: Math.PI / 3, z: 0 },
+        position: { x: -3.8, y: 0, z: 4 },
+        rotation: { x: 0, y: -Math.PI / 2, z: 0 },
         scale:    { x: 0.02, y: 0.02, z: 0.02 },
     });
 
@@ -202,7 +203,7 @@ export default function importModel(scene) {
 
     // --- TRICYCLE — à la place de la botte ---
     chargerModele('tricycle shinning.glb', {
-        position: { x: -1, y: 0, z: 1 },
+        position: { x: 3.1, y: 0, z: 1 },
         rotation: { x: 0, y: Math.PI / 2, z: 0 },
         scale:    { x: 1, y: 1, z: 1 },
     });
@@ -220,13 +221,17 @@ export default function importModel(scene) {
         scale:    { x: 0.9, y: 0.9, z: 0.9 },
     });
 
-        //chargerModele('persian_rug.glb', {
-        //position: { x: 0, y: 0.15, z: 0.2 },
-        //rotation: { x: 0.13, y: 0.13, z: -Math.PI / 2 },
-        //scale:    { x: 2, y: 2, z: 2 },
-    //});
+    chargerModele('old_table.glb', {
+    position: { x: 0, y: 0.95, z: 0 },
+    scale:    { x: 1, y: 1, z: 1 },
+    })
 
-    chargerModele('Wooden_door.glb', {
+        chargerModele('rug.glb', {
+        position: { x: 0, y: 0.05, z: 0.2 },
+        scale:    { x: 2, y: 2, z: 2 },
+    });
+
+    chargerModele('wooden_door.glb', {
     position: { x: 0, y: 1.5, z: 4.96 },
     rotation: { x: 0, y: Math.PI/2, z: 0 },
     scale:    { x: 1.5, y: 1.5, z: 1.5 },
@@ -238,4 +243,3 @@ export default function importModel(scene) {
     scale:    { x: 0.4, y: 0.4, z: 0.4 },
     })
 }   
-
