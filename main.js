@@ -30,7 +30,14 @@ const respiration = new Audio('assets/Human-breath.wav')
 respiration.loop = true;     // Le son recommence à l'infini
 respiration.volume = 0.04;   // Très bas pour que ce soit subtil et flippant
 
+// Déclaration des sons de la mort
+const stabSound = new Audio('assets/Slashing-sound.wav');
+const screamSound = new Audio('assets/Man-scream.wav');
+const demonicWhisper = new Audio('assets/whispers.wav');
 
+// On prépare déjà le chuchotement pour qu'il tourne en boucle à la fin
+demonicWhisper.loop = true;
+demonicWhisper.volume = 0.4;
 
 let objetSurvoleNom = null;
 let tentativeActuelle = "";
@@ -717,17 +724,6 @@ function updateSanityUI() {
     }
 }
 
-function gameOver() {
-    console.log("FONCTION GAME OVER DÉCLENCHÉE"); // Pour vérifier dans la console
-    const screen = document.getElementById('game-over-screen');
-    
-    if (screen) {
-        screen.style.display = 'flex'; // On force l'affichage
-        screen.style.opacity = '1';
-    } else {
-        console.error("Erreur : L'élément 'game-over-screen' est introuvable dans le HTML !");
-    }
-}
 
 // 3. Validation et connexion TMDB (Version Ultra-Stable)
 document.getElementById('confirm-ouija').onclick = async () => {
@@ -855,6 +851,36 @@ async function afficherFicheFilm(movie) {
     
     document.querySelector('.ouija-container').style.display = 'none';
     card.style.display = 'flex';
+}
+
+function gameOver() {
+    console.log("FONCTION GAME OVER DÉCLENCHÉE");
+    const screen = document.getElementById('game-over-screen');
+
+    // 0. Arrêt des sons d'ambiance
+    if (respiration) respiration.pause();
+
+    // 1. AFFICHAGE IMMÉDIAT (On n'attend pas les sons)
+    if (screen) {
+        screen.style.display = 'flex';
+        screen.style.opacity = '1';
+        screen.style.zIndex = "1000000"; // Sécurité pour passer devant le sang
+    }
+
+    // 2. SÉQUENCE SONORE
+    stabSound.volume = 1.0;
+    stabSound.play();
+
+    stabSound.onended = () => {
+        // 3. Cri de l'homme
+        screamSound.volume = 0.9;
+        screamSound.play();
+
+        screamSound.onended = () => {
+            // 4. Murmures démoniaques
+            demonicWhisper.play().catch(e => console.log("Audio bloqué"));
+        };
+    };
 }
 
 window.retourAuJeu = () => {
