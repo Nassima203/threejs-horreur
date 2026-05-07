@@ -396,6 +396,7 @@ function demarrerChrono() {
         // Si le temps est écoulé
         if (tempsRestant <= 0) {
             terminerPartie(false); // false = perdu
+            gameOver()
         }
         
         // Effet visuel : si moins de 30 secondes, le texte clignote
