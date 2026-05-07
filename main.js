@@ -790,7 +790,7 @@ document.getElementById('confirm-ouija').onclick = async () => {
         if (typeof updateSanityUI === "function") updateSanityUI();
         
         if (santeMentale <= 0) {
-        alert("VOTRE SANTÉ MENTALE EST ÉPUISÉE...")
+
         gameOver();
         }
     }
