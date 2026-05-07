@@ -26,14 +26,14 @@ document.body.appendChild(renderer.domElement);
 
 // VARIABLES DU JEU
 
-const respiration = new Audio('/assets//Human-breath.wav')
+const respiration = new Audio('/assets/Human-breath.wav')
 respiration.loop = true;     // Le son recommence à l'infini
 respiration.volume = 0.04;   // Très bas pour que ce soit subtil et flippant
 
 // Déclaration des sons de la mort
-const stabSound = new Audio('/assets///Slashing-sound.wav');
-const screamSound = new Audio('/assets///Man-scream.wav');
-const demonicWhisper = new Audio('/assets//whispers.wav');
+const stabSound = new Audio('/assets/Slashing-sound.wav');
+const screamSound = new Audio('/assets//Man-scream.wav');
+const demonicWhisper = new Audio('/assets/whispers.wav');
 
 // On prépare déjà le chuchotement pour qu'il tourne en boucle à la fin
 demonicWhisper.loop = true;
@@ -126,9 +126,9 @@ scene.add(bulbMesh);
 const textureLoader = new THREE.TextureLoader();
 
 // --- SOL ---
-const boisColor = textureLoader.load('/assets//woodcolor.jpg');
-const boisNormal = textureLoader.load('/assets//bois_normal.jpg');
-const boisRough = textureLoader.load('/assets//bois_rough.jpg');
+const boisColor = textureLoader.load('/assets/woodcolor.jpg');
+const boisNormal = textureLoader.load('/assets/bois_normal.jpg');
+const boisRough = textureLoader.load('/assets/bois_rough.jpg');
 [boisColor, boisNormal, boisRough].forEach(t => {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.repeat.set(4, 4);
@@ -148,9 +148,9 @@ const boisRoughWall = boisRough.clone();
 });
 
 // --- PLAFOND ---
-const ceilColor  = textureLoader.load('/assets//ceilingdiffuse.jpg');
-const ceilNormal = textureLoader.load('/assets//ceilingnormal.jpg');
-const ceilRough  = textureLoader.load('/assets//ceilingrough.jpg');
+const ceilColor  = textureLoader.load('/assets/ceilingdiffuse.jpg');
+const ceilNormal = textureLoader.load('/assets/ceilingnormal.jpg');
+const ceilRough  = textureLoader.load('/assets/ceilingrough.jpg');
 [ceilColor, ceilNormal, ceilRough].forEach(t => {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.anisotropy = maxAnisotropy;
@@ -159,9 +159,9 @@ const ceilRough  = textureLoader.load('/assets//ceilingrough.jpg');
 
 
 // --- PORTE ---
-const porteColor = textureLoader.load('/assets//portediffuse.jpg');
-const porteNormal = textureLoader.load('/assets//portenormal.jpg');
-const porteRough = textureLoader.load('/assets//porterough.jpg');
+const porteColor = textureLoader.load('/assets/portediffuse.jpg');
+const porteNormal = textureLoader.load('/assets/portenormal.jpg');
+const porteRough = textureLoader.load('/assets/porterough.jpg');
 [porteColor, porteNormal, porteRough].forEach(t => { t.anisotropy = maxAnisotropy; });
 
 /**
