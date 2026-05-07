@@ -13,6 +13,25 @@ html, body{
     left: 0;
 }
 
+#story-subtitle {
+    font-family: 'IM Fell English', serif; /* Ou une police cursive/ancienne */
+    font-style: italic;
+    font-size: 1.6rem;
+    color: #e8a840; /* Rouge sombre */
+    text-shadow: 0 0 15px rgba(139, 0, 0, 0.4);
+    min-height: 2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 1s ease-in-out;
+    margin-bottom: 40px;
+}
+
+#main-ui-reveal {
+    /* Assure que l'UI finale prend bien sa place proprement */
+    width: 100%;
+}
+
 #landing-page {
     position: absolute;
     top: 0;
@@ -233,7 +252,10 @@ html, body{
     top: 400px;   /* Ajuste selon la courbe de ton arche */
     left: 500px;
     font-size: 1.5rem;
-    color: #d4bc8d; /* La couleur bois/os de ta planche */
+    color: red; /* La couleur bois/os de ta planche */
+    font-weight: 800;
+    background-color: transparent;
+    padding: 10px;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -244,7 +266,9 @@ html, body{
     top: 400px;
     right: 500px;
     font-size: 1.5rem;
-    color: #d4bc8d;
+    color: red;
+    padding: 10px;
+    background-color: transparent;
     cursor: pointer;
     transition: 0.3s;
 }
@@ -257,6 +281,39 @@ html, body{
     display: flex;
     justify-content: center;
     gap: 40px;
+}
+
+#space-btn{
+    position: absolute;
+    bottom: 350px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: #d4bc8d;
+    cursor: pointer;
+    letter-spacing: 5px;
+    padding: 5px 25px;
+    border: 1px solid rgba(212, 188, 141, 0.2);
+    border-radius: 40px;
+    transition: all 0.3s ease;
+}
+
+.exit-btn{
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    margin: 0 auto;
+    transform: translateX(-50%);
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: #d4bc8d;
+    cursor: pointer;
+    letter-spacing: 5px;
+    padding: 5px 25px;
+    border: 1px solid rgba(212, 188, 141, 0.2);
+    border-radius: 40px;
+    transition: all 0.3s ease;
 }
 
 #planchette {

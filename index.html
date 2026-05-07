@@ -13,10 +13,13 @@
     <canvas class="webgl"></canvas>
     <div id="landing-page">
     <div class="content">
-        <h1 class="horror-title">LE GRENIER</h1>
-        <p class="subtitle">20 objets. 10 minutes. Une seule issue.</p>
+        <div id="story-subtitle">Appuyez sur n'importe quelle touche pour approcher...</div>
         
-        <button id="start-btn">VIVRE OU MOURIR. À TOI DE CHOISIR. </button>
+        <div id="main-ui-reveal" style="display: none; opacity: 0;">
+            <h1 class="horror-title">LE GRENIER</h1>
+            <p class="subtitle">20 objets. 10 minutes. Une seule issue.</p>
+            <button id="start-btn">VIVRE OU MOURIR. À TOI DE CHOISIR.</button>
+        </div>
     </div>
 </div>
     <div id="sanity-wrapper">
@@ -53,13 +56,13 @@
             
             <!-- Les lettres seront générées ici par le JS -->
             <div id="letters-arc"></div>
+            <button id="space-btn" onclick="ajouterEspace()">ESPACE</button>
+             <button class="exit-btn" onclick="fermerOuija()">QUITTER</button>
         </div>
 
         <div class="ouija-actions">
-            <button id="space-btn" onclick="ajouterEspace()">ESPACE</button>
             <button id="btn-non" onclick="effacerDerniereLettre()">NON</button>
             <button id="confirm-ouija">OUI</button>
-            <button class="exit-btn" onclick="fermerOuija()">QUITTER</button>
         </div>
     </div>
     <div id="movie-info-card" style="display:none;">
