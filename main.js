@@ -26,11 +26,18 @@ document.body.appendChild(renderer.domElement);
 
 // VARIABLES DU JEU
 
-const respiration = new Audio('assets/Human-breath.wav')
+const respiration = new Audio('/assets//Human-breath.wav')
 respiration.loop = true;     // Le son recommence à l'infini
 respiration.volume = 0.04;   // Très bas pour que ce soit subtil et flippant
 
+// Déclaration des sons de la mort
+const stabSound = new Audio('/assets///Slashing-sound.wav');
+const screamSound = new Audio('/assets///Man-scream.wav');
+const demonicWhisper = new Audio('/assets//whispers.wav');
 
+// On prépare déjà le chuchotement pour qu'il tourne en boucle à la fin
+demonicWhisper.loop = true;
+demonicWhisper.volume = 0.4;
 
 let objetSurvoleNom = null;
 let tentativeActuelle = "";
@@ -119,9 +126,9 @@ scene.add(bulbMesh);
 const textureLoader = new THREE.TextureLoader();
 
 // --- SOL ---
-const boisColor = textureLoader.load('/assets/woodcolor.jpg');
-const boisNormal = textureLoader.load('/assets/bois_normal.jpg');
-const boisRough = textureLoader.load('/assets/bois_rough.jpg');
+const boisColor = textureLoader.load('/assets//woodcolor.jpg');
+const boisNormal = textureLoader.load('/assets//bois_normal.jpg');
+const boisRough = textureLoader.load('/assets//bois_rough.jpg');
 [boisColor, boisNormal, boisRough].forEach(t => {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.repeat.set(4, 4);
@@ -141,9 +148,9 @@ const boisRoughWall = boisRough.clone();
 });
 
 // --- PLAFOND ---
-const ceilColor  = textureLoader.load('/assets/ceilingdiffuse.jpg');
-const ceilNormal = textureLoader.load('/assets/ceilingnormal.jpg');
-const ceilRough  = textureLoader.load('/assets/ceilingrough.jpg');
+const ceilColor  = textureLoader.load('/assets//ceilingdiffuse.jpg');
+const ceilNormal = textureLoader.load('/assets//ceilingnormal.jpg');
+const ceilRough  = textureLoader.load('/assets//ceilingrough.jpg');
 [ceilColor, ceilNormal, ceilRough].forEach(t => {
     t.wrapS = t.wrapT = THREE.RepeatWrapping;
     t.anisotropy = maxAnisotropy;
@@ -152,9 +159,9 @@ const ceilRough  = textureLoader.load('/assets/ceilingrough.jpg');
 
 
 // --- PORTE ---
-const porteColor = textureLoader.load('/assets/portediffuse.jpg');
-const porteNormal = textureLoader.load('/assets/portenormal.jpg');
-const porteRough = textureLoader.load('/assets/porterough.jpg');
+const porteColor = textureLoader.load('/assets//portediffuse.jpg');
+const porteNormal = textureLoader.load('/assets//portenormal.jpg');
+const porteRough = textureLoader.load('/assets//porterough.jpg');
 [porteColor, porteNormal, porteRough].forEach(t => { t.anisotropy = maxAnisotropy; });
 
 /**
@@ -296,13 +303,13 @@ animate();
 
 // Configuration du storytelling
 const voiceLines = [
-    { text: "Allô ? Y a-t-il quelqu'un ?", audio: "assets/line1.mp3" },
-    { text: "S'il vous plaît... pouvez-vous m'ouvrir la porte ?", audio: "assets/line2.mp3" },
-    { text: "Je suis coincée. Je n'arrive pas à sortir seule.", audio: "assets/line3.mp3" },
-    { text: "Faites vite, s'il vous plaît. Ça fait si longtemps que je suis là.", audio: "assets/line4.mp3" },
-    { text: "J'entends vos pas. Vous êtes si près.", audio: "assets/line5.mp3" },
-    { text: "S'il vous plaît... ouvrez juste la porte.", audio: "assets/line6.mp3" },
-    { text: "Merci. Merci d'être venu.", audio: "assets/line7.mp3" },
+    { text: "Allô ? Y a-t-il quelqu'un ?", audio: "/assets/line1.mp3" },
+    { text: "S'il vous plaît... pouvez-vous m'ouvrir la porte ?", audio: "/assets/line2.mp3" },
+    { text: "Je suis coincée. Je n'arrive pas à sortir seule.", audio: "/assets/line3.mp3" },
+    { text: "Faites vite, s'il vous plaît. Ça fait si longtemps que je suis là.", audio: "/assets/line4.mp3" },
+    { text: "J'entends vos pas. Vous êtes si près.", audio: "/assets/line5.mp3" },
+    { text: "S'il vous plaît... ouvrez juste la porte.", audio: "/assets/line6.mp3" },
+    { text: "Merci. Merci d'être venu.", audio: "/assets/line7.mp3" },
 ];
 
 
@@ -351,7 +358,7 @@ function revealMainUI() {
     subtitleEl.style.display = 'none';
     
     // Le bruit de porte qui "ouvre" le menu
-    const doorCreak = new Audio('assets/door-opening.wav');
+    const doorCreak = new Audio('/assets/door-opening.wav');
     doorCreak.volume = 0.5;
     doorCreak.play();
 
@@ -389,6 +396,7 @@ function demarrerChrono() {
         // Si le temps est écoulé
         if (tempsRestant <= 0) {
             terminerPartie(false); // false = perdu
+            gameOver()
         }
         
         // Effet visuel : si moins de 30 secondes, le texte clignote
@@ -675,7 +683,7 @@ document.getElementById('confirm-ouija').onclick = async () => {
         document.getElementById('word-display').innerText = "";
 
         // 1. Son de sursaut (un cri étouffé ou un gros boum)
-        const scareSound = new Audio('assets/sounds/scare_thud.mp3'); 
+        const scareSound = new Audio('/assets/sounds/scare_thud.mp3'); 
         scareSound.volume = 0.8;
         scareSound.play().catch(e => {});
 
@@ -717,17 +725,6 @@ function updateSanityUI() {
     }
 }
 
-function gameOver() {
-    console.log("FONCTION GAME OVER DÉCLENCHÉE"); // Pour vérifier dans la console
-    const screen = document.getElementById('game-over-screen');
-    
-    if (screen) {
-        screen.style.display = 'flex'; // On force l'affichage
-        screen.style.opacity = '1';
-    } else {
-        console.error("Erreur : L'élément 'game-over-screen' est introuvable dans le HTML !");
-    }
-}
 
 // 3. Validation et connexion TMDB (Version Ultra-Stable)
 document.getElementById('confirm-ouija').onclick = async () => {
@@ -771,7 +768,7 @@ document.getElementById('confirm-ouija').onclick = async () => {
         tentativeActuelle = "";
         document.getElementById('word-display').innerText = "";
 
-        const scareSound = new Audio('assets/sounds/scare_thud.mp3'); 
+        const scareSound = new Audio('/assets/sounds/scare_thud.mp3'); 
         scareSound.volume = 0.8;
         scareSound.play().catch(e => {});
 
@@ -855,6 +852,36 @@ async function afficherFicheFilm(movie) {
     
     document.querySelector('.ouija-container').style.display = 'none';
     card.style.display = 'flex';
+}
+
+function gameOver() {
+    console.log("FONCTION GAME OVER DÉCLENCHÉE");
+    const screen = document.getElementById('game-over-screen');
+
+    // 0. Arrêt des sons d'ambiance
+    if (respiration) respiration.pause();
+
+    // 1. AFFICHAGE IMMÉDIAT (On n'attend pas les sons)
+    if (screen) {
+        screen.style.display = 'flex';
+        screen.style.opacity = '1';
+        screen.style.zIndex = "1000000"; // Sécurité pour passer devant le sang
+    }
+
+    // 2. SÉQUENCE SONORE
+    stabSound.volume = 1.0;
+    stabSound.play();
+
+    stabSound.onended = () => {
+        // 3. Cri de l'homme
+        screamSound.volume = 0.9;
+        screamSound.play();
+
+        screamSound.onended = () => {
+            // 4. Murmures démoniaques
+            demonicWhisper.play().catch(e => console.log("Audio bloqué"));
+        };
+    };
 }
 
 window.retourAuJeu = () => {

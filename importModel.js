@@ -215,7 +215,7 @@ export default function importModel(scene) {
         scale:    { x: 0.04, y: 0.04, z: 0.04 },
     });
 
-        chargerModele('Workbench.glb', {
+        chargerModele('workbench.glb', {
         position: { x: 0, y: 0, z: -4 },
         rotation: { x: 0, y: 0, z: 0 },
         scale:    { x: 0.9, y: 0.9, z: 0.9 },
