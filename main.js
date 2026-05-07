@@ -671,9 +671,27 @@ document.getElementById('confirm-ouija').onclick = async () => {
         }
         
     } else {
-        alert("L'ESPRIT NE RECONNAÎT PAS CE NOM...");
         tentativeActuelle = "";
         document.getElementById('word-display').innerText = "";
+
+        // 1. Son de sursaut (un cri étouffé ou un gros boum)
+        const scareSound = new Audio('assets/sounds/scare_thud.mp3'); 
+        scareSound.volume = 0.8;
+        scareSound.play().catch(e => {});
+
+        // 2. Effet Visuel : Flash de sang
+        const blood = document.getElementById('blood-overlay');
+        if (blood) blood.classList.add('flash-hit');
+        
+        // 3. Effet Visuel : Secousse de l'écran
+        const board = document.querySelector('.ouija-container');
+        board.classList.add('shake-game');
+
+        // Nettoyage des classes après l'animation pour pouvoir recommencer
+        setTimeout(() => {
+            if (blood) blood.classList.remove('flash-hit');
+            board.classList.remove('shake-game');
+        }, 800);
         
         if (typeof updateSanityUI === "function") updateSanity(25);
     }
@@ -750,9 +768,26 @@ document.getElementById('confirm-ouija').onclick = async () => {
         
     } else {
         // ÉCHEC
-        alert("L'ESPRIT RESTE MUET... CE N'EST PAS LE BON NOM.");
         tentativeActuelle = "";
         document.getElementById('word-display').innerText = "";
+
+        const scareSound = new Audio('assets/sounds/scare_thud.mp3'); 
+        scareSound.volume = 0.8;
+        scareSound.play().catch(e => {});
+
+        // 2. Effet Visuel : Flash de sang
+        const blood = document.getElementById('blood-overlay');
+        if (blood) blood.classList.add('flash-hit');
+        
+        // 3. Effet Visuel : Secousse de l'écran
+        const board = document.querySelector('.ouija-container');
+        board.classList.add('shake-game');
+
+        // Nettoyage des classes après l'animation pour pouvoir recommencer
+        setTimeout(() => {
+            if (blood) blood.classList.remove('flash-hit');
+            board.classList.remove('shake-game');
+        }, 800);
         
         santeMentale -= 20;
         if (typeof updateSanityUI === "function") updateSanityUI();

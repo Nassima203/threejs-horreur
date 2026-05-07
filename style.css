@@ -283,6 +283,38 @@ html, body{
     gap: 40px;
 }
 
+/* Flash de sang qui envahit les bords de l'écran */
+#blood-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: radial-gradient(circle, transparent 20%, rgba(150, 0, 0, 0.8) 100%);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 999999 !important;
+}
+
+.flash-hit {
+    animation: blood-flash 0.8s ease-out;
+}
+
+@keyframes blood-flash {
+    0% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+/* Tremblement violent du conteneur de jeu */
+.shake-game {
+    animation: heavy-shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes heavy-shake {
+    10%, 90% { transform: translate3d(-2px, 0, 0); }
+    20%, 80% { transform: translate3d(4px, 0, 0); }
+    30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+    40%, 60% { transform: translate3d(6px, 0, 0); }
+}
+
 #space-btn{
     position: absolute;
     bottom: 350px;
